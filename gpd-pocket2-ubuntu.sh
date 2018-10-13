@@ -6,8 +6,10 @@ MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket2-monitor.conf"
 TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket2-touchscreen.conf"
 
 function enable_gpd_pocket2_config() {
-  mkdir -p "${XORG_CONF_PATH}"
   # Use heredocs to write GPD Pocket2 monitor and touchscreen rotation configs
+  mkdir -p "${XORG_CONF_PATH}"
+
+  # Rotate the monitor.
   cat << MONITOR > "${MONITOR_CONF}"
 Section "Monitor"
   Identifier "eDP-1"
@@ -15,6 +17,7 @@ Section "Monitor"
 EndSection
 MONITOR
 
+  # Rotate the touchscreen.
   cat << TOUCHSCREEN > "${TOUCH_CONF}"
 Section "InputClass"
   Identifier   "calibration"
@@ -22,6 +25,11 @@ Section "InputClass"
   Option       "TransformationMatrix"  "0 1 0 -1 0 1 0 0 1"
 EndSection
 TOUCHSCREEN
+
+  # Rotate the framebuffer
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1 quiet/' /etc/default/grub
+  update-grub
+
   echo "GPD Pocket2 monitor and touchscreen rotation configuration is applied. Please reboot to complete the setup."
 }
 
@@ -32,6 +40,11 @@ function disable_gpd_pocket2_config() {
       rm -f "${CONFIG}"
     fi
   done
+
+  # Remove the framebuffer rotation
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1/GRUB_CMDLINE_LINUX_DEFAULT="/' /etc/default/grub
+  update-grub
+
   echo "GPD Pocket2 monitor and touchscreen rotation configuration is removed. Please reboot to complete the setup."
 }
 
