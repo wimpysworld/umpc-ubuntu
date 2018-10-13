@@ -30,7 +30,7 @@ TOUCHSCREEN
   sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1 quiet/' /etc/default/grub
   update-grub
 
-  echo "GPD Pocket2 monitor and touchscreen rotation configuration is applied. Please reboot to complete the setup."
+  echo "GPD Pocket2 monitor and touchscreen rotation configuration is applied. Please log out of this desktop session to complete the setup."
 }
 
 function disable_gpd_pocket2_config() {
@@ -45,7 +45,7 @@ function disable_gpd_pocket2_config() {
   sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1/GRUB_CMDLINE_LINUX_DEFAULT="/' /etc/default/grub
   update-grub
 
-  echo "GPD Pocket2 monitor and touchscreen rotation configuration is removed. Please reboot to complete the setup."
+  echo "GPD Pocket2 monitor and touchscreen rotation configuration is removed. Please log out of this desktop session to complete the setup."
 }
 
 function usage() {
