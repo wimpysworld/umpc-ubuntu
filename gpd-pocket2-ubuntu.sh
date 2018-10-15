@@ -7,7 +7,7 @@ TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket2-touchscreen.conf"
 WIFI_FIRMWARE="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 
 function enable_gpd_pocket_wifi() {
-  cat << WIFI > ${WIFI_FIRMWARE}
+  cat << 'WIFI' > ${WIFI_FIRMWARE}
 # Sample variables file for BCM94356Z NGFF 22x30mm iPA, iLNA board with PCIe for production package
 NVRAMRev=$Rev: 373428 $
 #4356 chip = 4354 A2 chip
