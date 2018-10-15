@@ -25,7 +25,7 @@ TOUCHSCREEN
   sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1 quiet/' /etc/default/grub
   update-grub
 
-  if [ ${BRCM4365} -eq 1 ]; then
+  if [ ${BRCM4356} -eq 1 ]; then
     cat << 'WIFI' > ${WIFI_CONF}
 # Sample variables file for BCM94356Z NGFF 22x30mm iPA, iLNA board with PCIe for production package
 NVRAMRev=$Rev: 373428 $
@@ -216,7 +216,7 @@ else
 fi
 
 # Which GPD Pocket model is this?
-if [ "${PRIMARY_DISPLAY}" == "DSI-1" ] && [ ${BRCM4365} -eq 1 ]; then
+if [ "${PRIMARY_DISPLAY}" == "DSI-1" ] && [ ${BRCM4356} -eq 1 ]; then
   MODEL="GPD Pocket"
   MESSAGE="Please reboot to complete the setup."
   MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket-monitor.conf"
