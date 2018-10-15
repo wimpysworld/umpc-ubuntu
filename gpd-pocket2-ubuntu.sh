@@ -28,10 +28,10 @@ TOUCHSCREEN
   if [ ${BRCM4356} -eq 1 ]; then
     cat << 'WIFI' > ${WIFI_CONF}
 # Sample variables file for BCM94356Z NGFF 22x30mm iPA, iLNA board with PCIe for production package
-NVRAMRev=$Rev: 373428 $
+NVRAMRev=$Rev: 492104 $
 #4356 chip = 4354 A2 chip
 sromrev=11
-boardrev=0x1101
+boardrev=0x1102
 boardtype=0x073e
 boardflags=0x02400201
 #0x2000 enable 2G spur WAR
@@ -41,8 +41,8 @@ boardflags3=0x0000000a
 #define BFL3_5G_SPUR_WAR   0x00080000   /* enable spur WAR in 5G band */
 #define BFL3_AvVim   0x40000000   /* load AvVim from nvram */
 macaddr=00:90:4c:1a:10:01
-ccode=X2
-regrev=1
+ccode=0x5854
+regrev=205
 antswitch=0
 pdgain5g=4
 pdgain2g=4
@@ -51,7 +51,7 @@ tworangetssi5g=0
 paprdis=0
 femctrl=10
 vendid=0x14e4
-devid=0x43a3
+devid=0x43ec
 manfid=0x2d0
 #prodid=0x052e
 nocrc=1
@@ -107,10 +107,10 @@ pdoffset40ma0=0x0000
 pdoffset80ma0=0x0000
 pdoffset40ma1=0x0000
 pdoffset80ma1=0x0000
-maxp2ga0=80
-maxp5ga0=78,78,78,78
-maxp2ga1=80
-maxp5ga1=78,78,78,78
+maxp2ga0=76
+maxp5ga0=74,74,74,74
+maxp2ga1=76
+maxp5ga1=74,74,74,74
 cckbw202gpo=0x0000
 cckbw20ul2gpo=0x0000
 mcsbw202gpo=0x99644422
