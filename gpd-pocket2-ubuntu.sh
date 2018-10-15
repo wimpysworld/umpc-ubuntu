@@ -1,13 +1,32 @@
 #!/usr/bin/env bash
 
-# Define variables for the xorg configs
-XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
-MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket2-monitor.conf"
-TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket2-touchscreen.conf"
-WIFI_FIRMWARE="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
+function enable_gpd_pocket_config() {
+  # Install the GPD Pocket hardware configuration
+  mkdir -p "${XORG_CONF_PATH}"
 
-function enable_gpd_pocket_wifi() {
-  cat << 'WIFI' > ${WIFI_FIRMWARE}
+  # Rotate the monitor.
+  cat << MONITOR > "${MONITOR_CONF}"
+Section "Monitor"
+  Identifier "${PRIMARY_DISPLAY}"
+  Option     "Rotate"  "right"
+EndSection
+MONITOR
+
+  # Rotate the touchscreen.
+  cat << TOUCHSCREEN > "${TOUCH_CONF}"
+Section "InputClass"
+  Identifier   "calibration"
+  MatchProduct "Goodix Capacitive TouchScreen"
+  Option       "TransformationMatrix"  "0 1 0 -1 0 1 0 0 1"
+EndSection
+TOUCHSCREEN
+
+  # Rotate the framebuffer
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1 quiet/' /etc/default/grub
+  update-grub
+
+  if [ ${BRCM4365} -eq 1 ]; then
+    cat << 'WIFI' > ${WIFI_CONF}
 # Sample variables file for BCM94356Z NGFF 22x30mm iPA, iLNA board with PCIe for production package
 NVRAMRev=$Rev: 373428 $
 #4356 chip = 4354 A2 chip
@@ -135,50 +154,17 @@ rssicorrnorm5g_c0=1,2,3,1,2,3,6,6,8,6,6,8
 rssicorrnorm5g_c1=1,2,3,2,2,2,7,7,8,7,7,8
 WIFI
 
-  # Reload the brcmfmac kernel module
-  modprobe -r brcmfmac
-  modprobe brcmfmac
-}
-
-function enable_gpd_pocket2_config() {
-  PRIMARY_DISPLAY=$(xrandr -q | grep primary | cut -d' ' -f1 | sed 's/ //g')
-
-  # Use heredocs to write GPD Pocket2 monitor and touchscreen rotation configs
-  mkdir -p "${XORG_CONF_PATH}"
-
-  # Rotate the monitor.
-  cat << MONITOR > "${MONITOR_CONF}"
-Section "Monitor"
-  Identifier "${PRIMARY_DISPLAY}"
-  Option     "Rotate"  "right"
-EndSection
-MONITOR
-
-  # Rotate the touchscreen.
-  cat << TOUCHSCREEN > "${TOUCH_CONF}"
-Section "InputClass"
-  Identifier   "calibration"
-  MatchProduct "Goodix Capacitive TouchScreen"
-  Option       "TransformationMatrix"  "0 1 0 -1 0 1 0 0 1"
-EndSection
-TOUCHSCREEN
-
-  # Rotate the framebuffer
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1 quiet/' /etc/default/grub
-  update-grub
-
-  # Does this device have a BCM4356 wifi adapter?
-  BCM4365=$(lspci | grep BCM4356)
-  if [ $? -eq 0 ]; then
-    enable_gpd_pocket_wifi
+    # Reload the brcmfmac kernel module
+    modprobe -r brcmfmac
+    modprobe brcmfmac
   fi
 
-  echo "GPD Pocket2 monitor and touchscreen rotation configuration is applied. Please log out of this desktop session to complete the setup."
+  echo "${MODEL} hardware configuration is applied. ${MESSAGE}"
 }
 
-function disable_gpd_pocket2_config() {
-  # Remove the GPD Pocket 2 monitor and touchscreen rotation configurations
-  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${WIFI_FIRMWARE}; do
+function disable_gpd_pocket_config() {
+  # Remove the GPD Pocket hardware configuration
+  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${WIFI_CONF}; do
     if [ -f "${CONFIG}" ]; then
       rm -f "${CONFIG}"
     fi
@@ -188,7 +174,7 @@ function disable_gpd_pocket2_config() {
   sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1/GRUB_CMDLINE_LINUX_DEFAULT="/' /etc/default/grub
   update-grub
 
-  echo "GPD Pocket2 monitor and touchscreen rotation configuration is removed. Please log out of this desktop session to complete the setup."
+  echo "${MODEL} hardware configuration is removed. ${MESSAGE}"
 }
 
 function usage() {
@@ -197,8 +183,8 @@ function usage() {
     echo "  ${0} enable || disable"
     echo ""
     echo "You must supply one of the following modes of operation"
-    echo "  enable  : apply the GPD Pocket2 monitor and touchscreen rotation configuration"
-    echo "  disable : remove the GPD Pocket2 monitor and touchscreen rotation configuration"
+    echo "  enable  : apply the ${MODEL} hardware configuration"
+    echo "  disable : remove the ${MODEL} hardware configuration"
     echo "  help    : This help."
     echo
     exit 1
@@ -216,6 +202,32 @@ if [ $(id -u) -ne 0 ]; then
   exit 1
 fi
 
+# Define variables for the xorg configs
+XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
+WIFI_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
+
+# Get some system information
+PRIMARY_DISPLAY=$(xrandr -q | grep primary | cut -d' ' -f1 | sed 's/ //g')
+WIFI_CHECK=$(lspci | grep BCM4356)
+if [ $? -eq 0 ]; then
+  BRCM4356=1
+else
+  BRCM4356=0
+fi
+
+# Which GPD Pocket model is this?
+if [ "${PRIMARY_DISPLAY}" == "DSI-1" ] && [ ${BRCM4365} -eq 1 ]; then
+  MODEL="GPD Pocket"
+  MESSAGE="Please reboot to complete the setup."
+  MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket-monitor.conf"
+  TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket-touchscreen.conf"
+else
+  MODEL="GPD Pocket2"
+  MESSAGE="Please log out of this desktop session to complete the setup."
+  MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket2-monitor.conf"
+  TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket2-touchscreen.conf"
+fi
+
 # Display usage instructions if we've not been given an action. If an action
 # has been provided store it in lowercase.
 if [ -z "${1}" ]; then
@@ -226,9 +238,9 @@ fi
 
 case "${MODE}" in
   -d|--disable|disable)
-    disable_gpd_pocket2_config;;
+    disable_gpd_pocket_config;;
   -e|--enable|enable)
-    enable_gpd_pocket2_config;;
+    enable_gpd_pocket_config;;
   -h|--h|-help|--help|-?|help)
     usage;;
   *)
