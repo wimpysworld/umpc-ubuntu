@@ -13,6 +13,8 @@ monitor and touchscreen on Ubuntu for the [GPD Pocket2](https://www.indiegogo.co
 
 You must supply one of the following modes of operation
 
-  * `enable`  : apply the GPD Pocket2 monitor and touchscreen rotation configuration
-  * `disable` : remove the GPD Pocket2 monitor and touchscreen rotation configuration
+  * `enable`  : apply the GPD Pocket hardware configuration
+  * `disable` : remove the GPD Pocket hardware configuration
   * `help`    : This help.
+
+
