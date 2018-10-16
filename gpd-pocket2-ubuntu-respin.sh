@@ -23,6 +23,7 @@ MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-${MODEL}-monitor.conf"
 TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-${MODEL}-touchscreen.conf"
 WIFI_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_CONF="${SQUASH_OUT}/etc/default/grub"
+CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
 GLIB_CONF="${SQUASH_OUT}/usr/share/glib-2.0/schemas/99_gpd-{MODEL}.gschema.override"
 XRANDR_CONF="${SQUASH_OUT}/etc/xdg/autostart/gpd-${MODEL}-xrandr.desktop"
 
@@ -90,6 +91,10 @@ XRANDR
 # Rotate the framebuffer
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1 quiet/' "${GRUB_CONF}"
 
+# Increase tty font size
+sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
+# Add BRCM4356 firmware configuration
 if [ "${MODEL}" == "pocket" ]; then
   cat << 'WIFI' > ${WIFI_CONF}
 # Sample variables file for BCM94356Z NGFF 22x30mm iPA, iLNA board with PCIe for production package
