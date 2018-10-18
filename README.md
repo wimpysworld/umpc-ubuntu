@@ -9,9 +9,9 @@ A couple of scripts for [GPD Pocket](https://gpd.hk/gpdpocket) and [GPD Pocket
 ![GPD Pockets](gpd-pockets.jpg "The GPD Pocket & GPD Pocket 2 running Ubuntu MATE 18.10")
 
 **NOTE!** Both scripts have only been tested on [Ubuntu 
-MATE](https://ubuntu-mate.org) only tested on Ubuntu MATE 18.10. It is 
-unlikely they will work completely on Ubuntu is your use Wayland. Almost 
-certainly only works reliably on one of the Ubuntu 18.10 flavoursm, or newer.
+MATE](https://ubuntu-mate.org) 18.10. It is unlikely they will work completely 
+on Ubuntu if your use Wayland. Almost certainly that only work reliably on one of 
+the Ubuntu 18.10 (or newer) flavours.
 
 ## Pre-configured image
 
