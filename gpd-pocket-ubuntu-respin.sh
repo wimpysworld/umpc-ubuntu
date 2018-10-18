@@ -11,28 +11,22 @@ if [ ! -f /usr/lib/ISOLINUX/isohdpfx.bin ]; then
   exit 1
 fi
 
-MODEL="pocket2"
-ISO_IN="cosmic-desktop-amd64.iso"
-ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-gpd-${MODEL}\.iso/")
+ISO_IN="ubuntu-mate-18.10-desktop-amd64.iso"
+ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-gpd-pocket\.iso/")
 MNT_IN="${HOME}/iso_in"
 MNT_OUT="${HOME}/iso_out"
 SQUASH_IN="${MNT_IN}/casper/filesystem.squashfs"
 SQUASH_OUT="${MNT_OUT}/casper/squashfs-root"
 XORG_CONF_PATH="${SQUASH_OUT}/usr/share/X11/xorg.conf.d"
-MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-${MODEL}-monitor.conf"
-TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-${MODEL}-touchscreen.conf"
-WIFI_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
-GRUB_CONF="${SQUASH_OUT}/etc/default/grub"
+MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket-monitor.conf"
+TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket-touchscreen.conf"
+BRCM4356_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
+GRUB_DEFAULT_CONF="${SQUASH_OUT}/etc/default/grub"
+GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
-GLIB_CONF="${SQUASH_OUT}/usr/share/glib-2.0/schemas/99_gpd-{MODEL}.gschema.override"
-XRANDR_CONF="${SQUASH_OUT}/etc/xdg/autostart/gpd-${MODEL}-xrandr.desktop"
-
-# Which GPD Pocket model is this?
-if [ "${MODEL}" == "pocket" ]; then
-  PRIMARY_DISPLAY="DSI-1"
-else
-  PRIMARY_DISPLAY="eDP-1"
-fi
+GLIB_CONF="${SQUASH_OUT}/usr/share/glib-2.0/schemas/99_gpd-pocket.gschema.override"
+XRANDR_SCRIPT="gpd-pocket-display-scaler"
+XRANDR_DESKTOP="${SQUASH_OUT}/etc/xdg/autostart/gpd-pocket-xrandr.desktop"
 
 # Copy the contents of the ISO
 mkdir -p ${MNT_IN}
@@ -52,8 +46,15 @@ umount -l "${MNT_IN}"
 
 # Rotate the monitor.
   cat << MONITOR > "${MONITOR_CONF}"
+# GPD Pocket
 Section "Monitor"
-  Identifier "${PRIMARY_DISPLAY}"
+  Identifier "DSI-1"
+  Option     "Rotate"  "right"
+EndSection
+
+# GPD Pocket2
+Section "Monitor"
+  Identifier "eDP-1"
   Option     "Rotate"  "right"
 EndSection
 MONITOR
@@ -74,10 +75,18 @@ enable-hidpi='on'
 GLIB
 
 # Scale up the primary display to increase readability.
-cat << XRANDR > "${XRANDR_CONF}"
+cat << 'XRANDR_SCRIPT' > ${SQUASH_OUT}/usr/bin/${XRANDR_SCRIPT}
+#!/usr/bin/env bash
+
+PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g')
+xrandr --output ${PRIMARY_DISPLAY} --scale 0.64x0.64
+XRANDR_SCRIPT
+chmod +x ${SQUASH_OUT}/usr/bin/${XRANDR_SCRIPT}
+
+cat << XRANDR_DESKTOP > "${XRANDR_DESKTOP}"
 [Desktop Entry]
-Name=GPD ${MODEL} ${PRIMARY_DISPLAY} Scaler
-Exec=xrandr --output ${PRIMARY_DISPLAY} --scale 0.64x0.64
+Name=GPD Pocket Display Scaler
+Exec=${XRANDR_SCRIPT}
 Icon=user-desktop
 Terminal=false
 Type=Application
@@ -85,18 +94,18 @@ Categories=GTK;Settings;
 StartupNotify=false
 OnlyShowIn=MATE;
 NoDisplay=true
-Comment=Scale up the ${PRIMARY_DISPLAY} display on the GPD ${MODEL}. Disable this Startup Program and log out to restore the native resolution.
-XRANDR
+Comment=Scale up the internal display on the GPD Pocket. Disable this Startup Program and log out to restore the native resolution.
+XRANDR_DESKTOP
 
 # Rotate the framebuffer
-sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1 quiet/' "${GRUB_CONF}"
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
+sed -i 's/quiet splash/i915.fastboot=1 fbcon=rotate:1 quiet splash/g' "${GRUB_BOOT_CONF}"
 
 # Increase tty font size
 sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
 
 # Add BRCM4356 firmware configuration
-if [ "${MODEL}" == "pocket" ]; then
-  cat << 'WIFI' > ${WIFI_CONF}
+cat << 'BRCM4356' > ${BRCM4356_CONF}
 # Sample variables file for BCM94356Z NGFF 22x30mm iPA, iLNA board with PCIe for production package
 NVRAMRev=$Rev: 492104 $
 #4356 chip = 4354 A2 chip
@@ -222,16 +231,16 @@ rssicorrnorm_c0=4,4
 rssicorrnorm_c1=4,4
 rssicorrnorm5g_c0=1,2,3,1,2,3,6,6,8,6,6,8
 rssicorrnorm5g_c1=1,2,3,2,2,2,7,7,8,7,7,8
-WIFI
-fi
+BRCM4356
 
 # Update filesystem size
 du -sx --block-size=1 "${SQUASH_OUT}" | cut -f1 > "${MNT_OUT}/casper/filesystem.size"
 
 # Repack squahsfs
 rm -f "${MNT_OUT}/casper/filesystem.squashfs" 2>/dev/null
-mksquashfs "${SQUASH_OUT}" "${MNT_OUT}/casper/filesystem.squashfs" #-comp xz
+mksquashfs "${SQUASH_OUT}" "${MNT_OUT}/casper/filesystem.squashfs"
 rm -rfv "${SQUASH_OUT}"
+sync
 
 # Collect md5sums
 cd "${MNT_OUT}"
@@ -256,5 +265,9 @@ xorriso \
   -no-emul-boot \
   -isohybrid-gpt-basdat \
   -isohybrid-apm-hfsplus \
-  -volid "Ubuntu-MATE 18.10 GPD ${MODEL}" \
+  -volid "Ubuntu-MATE 18.10 GPD Pocket" \
   -o "${ISO_OUT}" "${MNT_OUT}/"
+
+# Clean up
+rm -rfv "${MNT_IN}"
+rm -rfv "${MNT_OUT}"
