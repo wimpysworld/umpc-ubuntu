@@ -1,13 +1,31 @@
 #!/usr/bin/env bash
 
+# Define variables for the xorg configs
+XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
+MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket-monitor.conf"
+TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket-touchscreen.conf"
+BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
+GRUB_DEFAULT_CONF="/etc/default/grub"
+CONSOLE_CONF="/etc/default/console-setup"
+GLIB_CONF="/usr/share/glib-2.0/schemas/99_gpd-pocket.gschema.override"
+XRANDR_SCRIPT="/usr/bin/gpd-pocket-display-scaler"
+XRANDR_DESKTOP="/etc/xdg/autostart/gpd-pocket-xrandr.desktop"
+
 function enable_gpd_pocket_config() {
   # Install the GPD Pocket hardware configuration
   mkdir -p "${XORG_CONF_PATH}"
 
   # Rotate the monitor.
   cat << MONITOR > "${MONITOR_CONF}"
+# GPD Pocket
 Section "Monitor"
-  Identifier "${PRIMARY_DISPLAY}"
+  Identifier "DSI-1"
+  Option     "Rotate"  "right"
+EndSection
+
+# GPD Pocket2
+Section "Monitor"
+  Identifier "eDP-1"
   Option     "Rotate"  "right"
 EndSection
 MONITOR
@@ -21,12 +39,44 @@ Section "InputClass"
 EndSection
 TOUCHSCREEN
 
+# Force Slick Greeter to use HiDPI scaling
+  cat << GLIB > "${GLIB_CONF}"
+[x.dm.slick-greeter]
+enable-hidpi='on'
+GLIB
+
+# Scale up the primary display to increase readability.
+  cat << 'XRANDR_SCRIPT' > ${XRANDR_SCRIPT}
+#!/usr/bin/env bash
+
+PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g')
+xrandr --output ${PRIMARY_DISPLAY} --scale 0.64x0.64
+XRANDR_SCRIPT
+  chmod +x ${XRANDR_SCRIPT}
+
+  cat << XRANDR_DESKTOP > "${XRANDR_DESKTOP}"
+[Desktop Entry]
+Name=GPD Pocket Display Scaler
+Exec=${XRANDR_SCRIPT}
+Icon=user-desktop
+Terminal=false
+Type=Application
+Categories=GTK;Settings;
+StartupNotify=false
+OnlyShowIn=MATE;
+NoDisplay=true
+Comment=Scale up the internal display on the GPD Pocket. Disable this Startup Program and log out to restore the native resolution.
+XRANDR_DESKTOP
+
   # Rotate the framebuffer
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1 quiet/' /etc/default/grub
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' /etc/default/grub
   update-grub
 
-  if [ ${BRCM4356} -eq 1 ]; then
-    cat << 'WIFI' > ${WIFI_CONF}
+  # Increase tty font size
+  sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
+  # Add BRCM4356 firmware configuration
+  cat << 'BRCM4356' > ${BRCM4356_CONF}
 # Sample variables file for BCM94356Z NGFF 22x30mm iPA, iLNA board with PCIe for production package
 NVRAMRev=$Rev: 492104 $
 #4356 chip = 4354 A2 chip
@@ -152,29 +202,31 @@ rssicorrnorm_c0=4,4
 rssicorrnorm_c1=4,4
 rssicorrnorm5g_c0=1,2,3,1,2,3,6,6,8,6,6,8
 rssicorrnorm5g_c1=1,2,3,2,2,2,7,7,8,7,7,8
-WIFI
+BRCM4356
 
-    # Reload the brcmfmac kernel module
-    modprobe -r brcmfmac
-    modprobe brcmfmac
-  fi
+  # Reload the brcmfmac kernel module
+  modprobe -r brcmfmac
+  modprobe brcmfmac
 
-  echo "${MODEL} hardware configuration is applied. ${MESSAGE}"
+  echo "GPD Pocket hardware configuration is applied. Please reboot to complete the setup."
 }
 
 function disable_gpd_pocket_config() {
   # Remove the GPD Pocket hardware configuration
-  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${WIFI_CONF}; do
+  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${BRCM4356_CONF} ${XRANDR_SCRIPT} ${XRANDR_DESKTOP}; do
     if [ -f "${CONFIG}" ]; then
       rm -f "${CONFIG}"
     fi
   done
 
   # Remove the framebuffer rotation
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1/GRUB_CMDLINE_LINUX_DEFAULT="/' /etc/default/grub
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1/GRUB_CMDLINE_LINUX_DEFAULT="/' /etc/default/grub
   update-grub
 
-  echo "${MODEL} hardware configuration is removed. ${MESSAGE}"
+  # Restore tty font size
+  sed -i 's/FONTSIZE=16x32"/FONTSIZE="8x16"/' "${CONSOLE_CONF}"
+
+  echo "GPD Pocket hardware configuration is removed. Please reboot to complete the setup."
 }
 
 function usage() {
@@ -200,32 +252,6 @@ fi
 if [ $(id -u) -ne 0 ]; then
   echo "ERROR! You must be root to run $(basename $0)"
   exit 1
-fi
-
-# Define variables for the xorg configs
-XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
-WIFI_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
-
-# Get some system information
-PRIMARY_DISPLAY=$(xrandr -q | grep primary | cut -d' ' -f1 | sed 's/ //g')
-WIFI_CHECK=$(lspci | grep BCM4356)
-if [ $? -eq 0 ]; then
-  BRCM4356=1
-else
-  BRCM4356=0
-fi
-
-# Which GPD Pocket model is this?
-if [ "${PRIMARY_DISPLAY}" == "DSI-1" ] && [ ${BRCM4356} -eq 1 ]; then
-  MODEL="GPD Pocket"
-  MESSAGE="Please reboot to complete the setup."
-  MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket-monitor.conf"
-  TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket-touchscreen.conf"
-else
-  MODEL="GPD Pocket2"
-  MESSAGE="Please log out of this desktop session to complete the setup."
-  MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket2-monitor.conf"
-  TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket2-touchscreen.conf"
 fi
 
 # Display usage instructions if we've not been given an action. If an action
