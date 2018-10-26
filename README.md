@@ -29,7 +29,7 @@ Pocket 2 and run the following to inject the required hardware configuration.
 ```
 git clone https://github.com/wimpysworld/gpd-pocket2-ubuntu.git
 cd gpd-pocket2-ubuntu
-sudo ./gpd-pocket2-ubuntu.sh enable || disable
+sudo ./gpd-pocket-ubuntu.sh enable || disable
 ```
 
 You must supply one of the following modes of operation
