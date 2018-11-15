@@ -10,6 +10,7 @@ CONSOLE_CONF="/etc/default/console-setup"
 GLIB_CONF="/usr/share/glib-2.0/schemas/99_gpd-pocket.gschema.override"
 XRANDR_SCRIPT="/usr/bin/gpd-pocket-display-scaler"
 XRANDR_DESKTOP="/etc/xdg/autostart/gpd-pocket-xrandr.desktop"
+INTEL_CONF="${XORG_CONF_PATH}/20-intel.conf"
 
 function enable_gpd_pocket_config() {
   # Install the GPD Pocket hardware configuration
@@ -28,7 +29,23 @@ Section "Monitor"
   Identifier "eDP-1"
   Option     "Rotate"  "right"
 EndSection
+
+Section "Monitor"
+  Identifier "eDP1"
+  Option     "Rotate"  "right"
+EndSection
 MONITOR
+
+  # Prevent tearing
+  cat << INTEL > "${INTEL_CONF}"
+Section "Device"
+  Identifier  "Device0"
+  Driver      "intel"
+  Option     "AccelMethod"            "sna"
+  Option     "TearFree"               "true"
+  Option     "DRI"			"3"
+EndSection
+INTEL
 
   # Rotate the touchscreen.
   cat << TOUCHSCREEN > "${TOUCH_CONF}"
@@ -68,6 +85,12 @@ NoDisplay=true
 Comment=Scale up the internal display on the GPD Pocket. Disable this Startup Program and log out to restore the native resolution.
 XRANDR_DESKTOP
 
+  # Fix the GRUB2 menu is not displayed at all on the GPD Pocket 2
+  cat << GRUB_DISPLAY_FIX >> /etc/default/grub
+GRUB_GFXMODE=1200x1920x32
+GRUB_GFXPAYLOAD_LINUX=keep
+GRUB_DISPLAY_FIX
+  
   # Rotate the framebuffer
   sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' /etc/default/grub
   update-grub
