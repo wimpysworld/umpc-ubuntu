@@ -25,7 +25,7 @@ EndSection
 
 # GPD Pocket2
 Section "Monitor"
-  Identifier "eDP-1"
+  Identifier "eDP1"
   Option     "Rotate"  "right"
 EndSection
 MONITOR
