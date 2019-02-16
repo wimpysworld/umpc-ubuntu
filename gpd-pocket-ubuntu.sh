@@ -69,7 +69,8 @@ Comment=Scale up the internal display on the GPD Pocket. Disable this Startup Pr
 XRANDR_DESKTOP
 
   # Rotate the framebuffer
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' /etc/default/grub
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/#GRUB_GFXMODE="480x640/GRUB_GFXMODE=1200x1920/' "${GRUB_DEFAULT_CONF}"
   update-grub
 
   # Increase tty font size
@@ -220,7 +221,8 @@ function disable_gpd_pocket_config() {
   done
 
   # Remove the framebuffer rotation
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1/GRUB_CMDLINE_LINUX_DEFAULT="/' /etc/default/grub
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1/GRUB_CMDLINE_LINUX_DEFAULT="/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_GFXMODE="1200x1920/#GRUB_GFXMODE=480x640/' "${GRUB_DEFAULT_CONF}"
   update-grub
 
   # Restore tty font size

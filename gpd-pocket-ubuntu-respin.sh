@@ -99,7 +99,9 @@ XRANDR_DESKTOP
 
 # Rotate the framebuffer
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
+sed -i 's/#GRUB_GFXMODE="480x640/GRUB_GFXMODE=1200x1920/' "${GRUB_DEFAULT_CONF}"
 sed -i 's/quiet splash/i915.fastboot=1 fbcon=rotate:1 quiet splash/g' "${GRUB_BOOT_CONF}"
+#sed -i 's/#GRUB_GFXMODE="480x640/GRUB_GFXMODE=1200x1920/' "${GRUB_BOOT_CONF}
 
 # Increase tty font size
 sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
