@@ -49,8 +49,11 @@ GLIB
   cat << 'XRANDR_SCRIPT' > ${XRANDR_SCRIPT}
 #!/usr/bin/env bash
 
-PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g')
-xrandr --output ${PRIMARY_DISPLAY} --scale 0.64x0.64
+PRIMARY_RESOLUTION=$(xrandr | grep "connected primary" | cut -d' ' -f4 | cut -d'+' -f1 | sed 's/ //g')
+if [ "${PRIMARY_RESOLUTION}" == "1920x1200" ]; then
+  PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g')
+  xrandr --output ${PRIMARY_DISPLAY} --scale 0.64x0.64
+fi
 XRANDR_SCRIPT
   chmod +x ${XRANDR_SCRIPT}
 
