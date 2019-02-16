@@ -11,7 +11,8 @@ if [ ! -f /usr/lib/ISOLINUX/isohdpfx.bin ]; then
   exit 1
 fi
 
-ISO_IN="ubuntu-mate-18.10-desktop-amd64.iso"
+ISO_VER="18.04.2"
+ISO_IN="ubuntu-mate-${ISO_VER}-desktop-amd64.iso"
 ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-gpd-pocket\.iso/")
 MNT_IN="${HOME}/iso_in"
 MNT_OUT="${HOME}/iso_out"
@@ -270,7 +271,7 @@ xorriso \
   -no-emul-boot \
   -isohybrid-gpt-basdat \
   -isohybrid-apm-hfsplus \
-  -volid "Ubuntu-MATE 18.10 GPD Pocket" \
+  -volid "Ubuntu-MATE ${ISO_VER} GPD Pocket" \
   -o "${ISO_OUT}" "${MNT_OUT}/"
 
 # Clean up
