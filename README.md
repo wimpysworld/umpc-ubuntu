@@ -54,3 +54,11 @@ sudo ./gpd-pocket-ubuntu-respin.sh
 
 A new .iso will be created that includes the additional hardware tweaks
 required by the GPD Pocket and GPD Pocket 2.
+
+## GPD Pocket Boot Menu
+
+Switch the GPD Pocket on, immediately hold the Fn button and repeatedly tap the F7 button until the Boot Manager screen appears.
+
+## GPD Pocket 2 Boot Menu
+
+Switch the GPD Pocket 2 on, immediately hold the Fn button and repeatedly tap the F12 button until the Boot Manager screen appears.
