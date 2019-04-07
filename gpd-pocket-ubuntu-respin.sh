@@ -70,6 +70,9 @@ unsquashfs "${SQUASH_IN}"
 cd -
 umount -l "${MNT_IN}"
 
+# Enable Intel SNA, DRI3 and TearFree.
+inject_data "${INTEL_CONF}"
+
 # Rotate the monitor.
   cat << MONITOR > "${MONITOR_CONF}"
 # GPD Pocket

@@ -29,8 +29,8 @@ function inject_data() {
 }
 
 function enable_gpd_pocket_config() {
-  # Install the GPD Pocket hardware configuration
-  mkdir -p "${XORG_CONF_PATH}"
+  # Enable Intel SNA, DRI3 and TearFree.
+  inject_data "${INTEL_CONF}"
 
   # Rotate the monitor.
   cat << MONITOR > "${MONITOR_CONF}"
