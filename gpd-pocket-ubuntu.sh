@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
-# Define variables for the xorg configs
+# Set to either "gpd-pocket" or "gpd-pocket2"
+GPD="gpd-pocket2"
 XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
-MONITOR_CONF="${XORG_CONF_PATH}/40-gpd-pocket-monitor.conf"
-TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket-touchscreen.conf"
+INTEL_CONF="${XORG_CONF_PATH}/20-${GPD}-intel.conf"
+MONITOR_CONF="${XORG_CONF_PATH}/40-${GPD}-monitor.conf"
+TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${GPD}-trackpoint.conf"
+TOUCH_CONF="${XORG_CONF_PATH}/81-${GPD}-touchscreen.conf"
 BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="/etc/default/grub"
 CONSOLE_CONF="/etc/default/console-setup"
