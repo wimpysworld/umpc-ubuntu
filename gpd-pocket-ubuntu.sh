@@ -68,7 +68,7 @@ function disable_gpd_pocket_config() {
   # Remove the GPD Pocket hardware configuration
   for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${BRCM4356_CONF} ${XRANDR_SCRIPT} ${XRANDR_DESKTOP}; do
     if [ -f "${CONFIG}" ]; then
-      rm -f "${CONFIG}"
+      rm -fv "${CONFIG}"
     fi
   done
 
