@@ -49,7 +49,7 @@ function inject_data() {
 mkdir -p ${MNT_IN}
 mkdir -p ${MNT_OUT}
 mount -o loop "${ISO_IN}" "${MNT_IN}"
-rsync -av --delete \
+rsync -aHAXx --delete \
   --exclude=/casper/filesystem.squashfs \
   --exclude=/casper/filesystem.squashfs.gpg \
   --exclude=/md5sum.txt \
