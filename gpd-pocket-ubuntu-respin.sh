@@ -11,9 +11,16 @@ if [ ! -f /usr/lib/ISOLINUX/isohdpfx.bin ]; then
   exit 1
 fi
 
-ISO_VER="18.04.2"
-ISO_IN="ubuntu-mate-${ISO_VER}-desktop-amd64.iso"
-ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-gpd-pocket\.iso/")
+if [ ! -f /usr/bin/xorriso ]; then
+  echo "ERROR! Unable to find /usr/bin/xorriso. Please 'apt install xorriso'"
+  exit 1
+fi
+
+# Set to either "gpd-pocket" or "gpd-pocket2"
+GPD="gpd-pocket2"
+ISO_IN="ubuntu-mate-18.04.2-desktop-amd64.iso"
+ISO_VER=$(echo ${ISO_IN} | cut -d'-' -f3)
+ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-${GPD}\.iso/")
 MNT_IN="${HOME}/iso_in"
 MNT_OUT="${HOME}/iso_out"
 SQUASH_IN="${MNT_IN}/casper/filesystem.squashfs"
