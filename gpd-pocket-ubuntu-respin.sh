@@ -92,10 +92,20 @@ if [ "${GPD}" == "gpd-pocket" ]; then
 fi
 
 # Rotate the framebuffer
-sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
-sed -i 's/#GRUB_GFXMODE="480x640/GRUB_GFXMODE=1200x1920/' "${GRUB_DEFAULT_CONF}"
-sed -i 's/quiet splash/i915.fastboot=1 fbcon=rotate:1 quiet splash/g' "${GRUB_BOOT_CONF}"
-#sed -i 's/#GRUB_GFXMODE="480x640/GRUB_GFXMODE=1200x1920/' "${GRUB_BOOT_CONF}
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
+sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/' "${GRUB_DEFAULT_CONF}"
+if [ "${GPD}" == "gpd-pocket2" ]; then
+  grep -qxF 'GRUB_GFXMODE=1200x1920x32' "${GRUB_DEFAULT_CONF}" || echo 'GRUB_GFXMODE=1200x1920x32' >> "${GRUB_DEFAULT_CONF}"
+fi
+sed -i 's/quiet splash/video=efifb fbcon=rotate:1 quiet splash/g' "${GRUB_BOOT_CONF}"
+
+echo "${GRUB_DEFAULT_CONF}"
+cat "${GRUB_DEFAULT_CONF}"
+echo
+
+echo "${GRUB_BOOT_CONF}"
+cat "${GRUB_BOOT_CONF}"
+echo
 
 # Increase tty font size
 sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"

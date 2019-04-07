@@ -54,8 +54,11 @@ function enable_gpd_pocket_config() {
   fi
 
   # Rotate the framebuffer
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
-  sed -i 's/#GRUB_GFXMODE="480x640/GRUB_GFXMODE=1200x1920/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/' "${GRUB_DEFAULT_CONF}"
+  if [ "${GPD_POCKET}" == "gpd-pocket2" ]; then
+    grep -qxF 'GRUB_GFXMODE=1200x1920x32' "${GRUB_DEFAULT_CONF}" || echo 'GRUB_GFXMODE=1200x1920x32' >> "${GRUB_DEFAULT_CONF}"
+  fi
   update-grub
 
   # Increase tty font size
@@ -73,8 +76,9 @@ function disable_gpd_pocket_config() {
   done
 
   # Remove the framebuffer rotation
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1/GRUB_CMDLINE_LINUX_DEFAULT="/' "${GRUB_DEFAULT_CONF}"
-  sed -i 's/GRUB_GFXMODE="1200x1920/#GRUB_GFXMODE=480x640/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/GRUB_CMDLINE_LINUX_DEFAULT="quiet/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/GRUB_CMDLINE_LINUX=""/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_GFXMODE=1200x1920x32/d' "${GRUB_DEFAULT_CONF}"
   update-grub
 
   # Restore tty font size
