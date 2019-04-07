@@ -74,19 +74,10 @@ umount -l "${MNT_IN}"
 inject_data "${INTEL_CONF}"
 
 # Rotate the monitor.
-  cat << MONITOR > "${MONITOR_CONF}"
-# GPD Pocket
-Section "Monitor"
-  Identifier "DSI-1"
-  Option     "Rotate"  "right"
-EndSection
+inject_data "${MONITOR_CONF}"
 
-# GPD Pocket2
-Section "Monitor"
-  Identifier "eDP-1"
-  Option     "Rotate"  "right"
-EndSection
-MONITOR
+# Scroll while holding down the right track point button
+inject_data "${TRACKPOINT_CONF}"
 
 # Rotate the touchscreen.
 cat << TOUCHSCREEN > "${TOUCH_CONF}"
