@@ -87,7 +87,9 @@ inject_data "${XRANDR_SCRIPT}"
 inject_data "${XRANDR_DESKTOP}"
 
 # Add BRCM4356 firmware configuration
-inject_data "${BRCM4356_CONF}"
+if [ "${GPD}" == "gpd-pocket" ]; then
+  inject_data "${BRCM4356_CONF}"
+fi
 
 # Rotate the framebuffer
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"

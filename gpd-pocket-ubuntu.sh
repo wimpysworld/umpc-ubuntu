@@ -46,7 +46,12 @@ function enable_gpd_pocket_config() {
   inject_data "${XRANDR_DESKTOP}"
 
   # Add BRCM4356 firmware configuration
-  inject_data "${BRCM4356_CONF}"
+  if [ "${GPD}" == "gpd-pocket" ]; then
+    inject_data "${BRCM4356_CONF}"
+    # Reload the brcmfmac kernel module
+    modprobe -r brcmfmac
+    modprobe brcmfmac
+  fi
 
   # Rotate the framebuffer
   sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="i915.fastboot=1 fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
@@ -55,10 +60,6 @@ function enable_gpd_pocket_config() {
 
   # Increase tty font size
   sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
-
-  # Reload the brcmfmac kernel module
-  modprobe -r brcmfmac
-  modprobe brcmfmac
 
   echo "GPD Pocket hardware configuration is applied. Please reboot to complete the setup."
 }
