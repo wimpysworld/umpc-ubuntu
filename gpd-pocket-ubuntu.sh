@@ -40,6 +40,9 @@ function enable_gpd_pocket_config() {
 
   # Rotate the touchscreen.
   inject_data "${TOUCH_RULES}"
+  # Reload udev rules
+  udevadm control --reload-rules
+  udevadm trigger
 
   # Scale up the primary display to increase readability.
   inject_data "${XRANDR_SCRIPT}"
