@@ -6,7 +6,7 @@ XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${GPD}-intel.conf"
 MONITOR_CONF="${XORG_CONF_PATH}/40-${GPD}-monitor.conf"
 TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${GPD}-trackpoint.conf"
-TOUCH_CONF="${XORG_CONF_PATH}/81-${GPD}-touchscreen.conf"
+TOUCH_RULES="/etc/udev/rules.d/99-gpd-touch.rules"
 BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="/etc/default/grub"
 CONSOLE_CONF="/etc/default/console-setup"
@@ -39,7 +39,7 @@ function enable_gpd_pocket_config() {
   inject_data "${TRACKPOINT_CONF}"
 
   # Rotate the touchscreen.
-  inject_data "${TOUCH_CONF}"
+  inject_data "${TOUCH_RULES}"
 
   # Scale up the primary display to increase readability.
   inject_data "${XRANDR_SCRIPT}"

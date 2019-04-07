@@ -29,7 +29,7 @@ XORG_CONF_PATH="${SQUASH_OUT}/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${GPD}-intel.conf"
 MONITOR_CONF="${XORG_CONF_PATH}/40-${GPD}-monitor.conf"
 TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${GPD}-trackpoint.conf"
-TOUCH_CONF="${XORG_CONF_PATH}/81-${GPD}-touchscreen.conf"
+TOUCH_RULES="${SQUASH_OUT}/etc/udev/rules.d/99-${GPD}-touch.rules"
 BRCM4356_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="${SQUASH_OUT}/etc/default/grub"
 GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
@@ -80,7 +80,7 @@ inject_data "${MONITOR_CONF}"
 inject_data "${TRACKPOINT_CONF}"
 
 # Rotate the touchscreen.
-inject_data "${TOUCH_CONF}"
+inject_data "${TOUCH_RULES}"
 
 # Scale up the primary display to increase readability.
 inject_data "${XRANDR_SCRIPT}"
