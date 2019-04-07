@@ -293,7 +293,7 @@ xorriso \
   -no-emul-boot \
   -isohybrid-gpt-basdat \
   -isohybrid-apm-hfsplus \
-  -volid "Ubuntu-MATE ${ISO_VER} GPD Pocket" \
+  -volid "${GPD} ${ISO_VER}" \
   -o "${ISO_OUT}" "${MNT_OUT}/"
 
 # Clean up
