@@ -28,6 +28,23 @@ CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
 XRANDR_SCRIPT="${SQUASH_OUT}/usr/bin/gpd-display-scaler"
 XRANDR_DESKTOP="${SQUASH_OUT}/etc/xdg/autostart/gpd-display-scaler.desktop"
 
+# Copy file from /data to it's intended location
+function inject_data() {
+  local TARGET_FILE="${1}"
+  local TARGET_DIR=$(dirname "${TARGET_FILE}")
+  local SOURCE_FILE="data/$(basename ${TARGET_FILE})"
+
+  echo " - Injecting ${TARGET_FILE}"
+
+  if [ ! -d "${TARGET_DIR}" ]; then
+    mkdir -p "${TARGET_DIR}"
+  fi
+  
+  if [ -f "${SOURCE_FILE}" ]; then
+    cp "${SOURCE_FILE}" "${TARGET_FILE}"
+  fi
+}
+
 # Copy the contents of the ISO
 mkdir -p ${MNT_IN}
 mkdir -p ${MNT_OUT}

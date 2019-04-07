@@ -10,6 +10,21 @@ CONSOLE_CONF="/etc/default/console-setup"
 XRANDR_SCRIPT="/usr/bin/gpd-display-scaler"
 XRANDR_DESKTOP="/etc/xdg/autostart/gpd-display-scaler.desktop"
 
+# Copy file from /data to it's intended location
+function inject_data() {
+  local TARGET_FILE="${1}"
+  local TARGET_DIR=$(dirname "${TARGET_FILE}")
+  local SOURCE_FILE="data/$(basename ${TARGET_FILE})"
+
+  if [ ! -d "${TARGET_DIR}" ]; then
+    mkdir -p "${TARGET_DIR}"
+  fi
+  
+  if [ -f "${SOURCE_FILE}" ]; then
+    cp "${SOURCE_FILE}" "${TARGET_FILE}"
+  fi
+}
+
 function enable_gpd_pocket_config() {
   # Install the GPD Pocket hardware configuration
   mkdir -p "${XORG_CONF_PATH}"
