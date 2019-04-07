@@ -256,7 +256,9 @@ du -sx --block-size=1 "${SQUASH_OUT}" | cut -f1 > "${MNT_OUT}/casper/filesystem.
 # Repack squahsfs
 rm -f "${MNT_OUT}/casper/filesystem.squashfs" 2>/dev/null
 mksquashfs "${SQUASH_OUT}" "${MNT_OUT}/casper/filesystem.squashfs"
-rm -rfv "${SQUASH_OUT}"
+echo "Cleaning up..."
+echo "  - ${SQUASH_OUT}"
+rm -rf "${SQUASH_OUT}"
 sync
 
 # Collect md5sums
@@ -286,5 +288,8 @@ xorriso \
   -o "${ISO_OUT}" "${MNT_OUT}/"
 
 # Clean up
-rm -rfv "${MNT_IN}"
-rm -rfv "${MNT_OUT}"
+echo "Cleaning up..."
+echo "  - ${MNT_IN}"
+rm -rf "${MNT_IN}"
+echo "  - ${MNT_OUT}"
+rm -rf "${MNT_OUT}"
