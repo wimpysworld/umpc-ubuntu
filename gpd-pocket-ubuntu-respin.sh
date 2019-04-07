@@ -25,9 +25,8 @@ BRCM4356_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="${SQUASH_OUT}/etc/default/grub"
 GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
-GLIB_CONF="${SQUASH_OUT}/usr/share/glib-2.0/schemas/99_gpd-pocket.gschema.override"
-XRANDR_SCRIPT="gpd-pocket-display-scaler"
-XRANDR_DESKTOP="${SQUASH_OUT}/etc/xdg/autostart/gpd-pocket-xrandr.desktop"
+XRANDR_SCRIPT="${SQUASH_OUT}/usr/bin/gpd-display-scaler"
+XRANDR_DESKTOP="${SQUASH_OUT}/etc/xdg/autostart/gpd-display-scaler.desktop"
 
 # Copy the contents of the ISO
 mkdir -p ${MNT_IN}
@@ -69,11 +68,6 @@ Section "InputClass"
 EndSection
 TOUCHSCREEN
 
-# Force Slick Greeter to use HiDPI scaling
-cat << GLIB > "${GLIB_CONF}"
-[x.dm.slick-greeter]
-enable-hidpi='on'
-GLIB
 
 # Scale up the primary display to increase readability.
 cat << 'XRANDR_SCRIPT' > ${SQUASH_OUT}/usr/bin/${XRANDR_SCRIPT}

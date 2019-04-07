@@ -7,9 +7,8 @@ TOUCH_CONF="${XORG_CONF_PATH}/99-gpd-pocket-touchscreen.conf"
 BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="/etc/default/grub"
 CONSOLE_CONF="/etc/default/console-setup"
-GLIB_CONF="/usr/share/glib-2.0/schemas/99_gpd-pocket.gschema.override"
-XRANDR_SCRIPT="/usr/bin/gpd-pocket-display-scaler"
-XRANDR_DESKTOP="/etc/xdg/autostart/gpd-pocket-xrandr.desktop"
+XRANDR_SCRIPT="/usr/bin/gpd-display-scaler"
+XRANDR_DESKTOP="/etc/xdg/autostart/gpd-display-scaler.desktop"
 
 function enable_gpd_pocket_config() {
   # Install the GPD Pocket hardware configuration
@@ -39,11 +38,6 @@ Section "InputClass"
 EndSection
 TOUCHSCREEN
 
-# Force Slick Greeter to use HiDPI scaling
-  cat << GLIB > "${GLIB_CONF}"
-[x.dm.slick-greeter]
-enable-hidpi='on'
-GLIB
 
 # Scale up the primary display to increase readability.
   cat << 'XRANDR_SCRIPT' > ${XRANDR_SCRIPT}
