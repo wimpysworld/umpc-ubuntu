@@ -80,13 +80,7 @@ inject_data "${MONITOR_CONF}"
 inject_data "${TRACKPOINT_CONF}"
 
 # Rotate the touchscreen.
-cat << TOUCHSCREEN > "${TOUCH_CONF}"
-Section "InputClass"
-  Identifier   "calibration"
-  MatchProduct "Goodix Capacitive TouchScreen"
-  Option       "TransformationMatrix"  "0 1 0 -1 0 1 0 0 1"
-EndSection
-TOUCHSCREEN
+inject_data "${TOUCH_CONF}"
 
 
 # Scale up the primary display to increase readability.
