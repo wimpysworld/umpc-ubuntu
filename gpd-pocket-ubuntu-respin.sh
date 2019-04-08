@@ -57,6 +57,14 @@ function inject_data() {
   fi
 }
 
+function clean_up() {
+  echo "Cleaning up..."
+  echo "  - ${MNT_IN}"
+  rm -rf "${MNT_IN}"
+  echo "  - ${MNT_OUT}"
+  rm -rf "${MNT_OUT}"
+}
+
 # Copy the contents of the ISO
 mkdir -p ${MNT_IN}
 mkdir -p ${MNT_OUT}
@@ -158,9 +166,4 @@ xorriso \
   -volid "${FLAVOUR} ${VERSION} ${GPD}" \
   -o "${ISO_OUT}" "${MNT_OUT}/"
 
-# Clean up
-echo "Cleaning up..."
-echo "  - ${MNT_IN}"
-rm -rf "${MNT_IN}"
-echo "  - ${MNT_OUT}"
-rm -rf "${MNT_OUT}"
+clean_up
