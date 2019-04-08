@@ -110,6 +110,7 @@ TOUCH_RULES="${SQUASH_OUT}/etc/udev/rules.d/99-${GPD}-touch.rules"
 BRCM4356_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="${SQUASH_OUT}/etc/default/grub"
 GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
+GRUB_LOOPBACK_CONF="${MNT_OUT}/boot/grub/loopback.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
 XRANDR_SCRIPT="${SQUASH_OUT}/usr/bin/gpd-display-scaler"
 XRANDR_DESKTOP="${SQUASH_OUT}/etc/xdg/autostart/gpd-display-scaler.desktop"
@@ -176,6 +177,7 @@ if [ "${GPD}" == "gpd-pocket2" ]; then
   grep -qxF 'GRUB_GFXMODE=1200x1920x32' "${GRUB_DEFAULT_CONF}" || echo 'GRUB_GFXMODE=1200x1920x32' >> "${GRUB_DEFAULT_CONF}"
 fi
 sed -i 's/quiet splash/video=efifb fbcon=rotate:1 quiet splash/g' "${GRUB_BOOT_CONF}"
+sed -i 's/quiet splash/video=efifb fbcon=rotate:1 quiet splash/g' "${GRUB_LOOPBACK_CONF}"
 
 echo
 echo "Modified : ${GRUB_DEFAULT_CONF}"
@@ -185,6 +187,11 @@ echo
 echo
 echo "Modified : ${GRUB_BOOT_CONF}"
 cat "${GRUB_BOOT_CONF}"
+echo
+
+echo
+echo "Modified : ${GRUB_LOOPBACK_CONF}"
+cat "${GRUB_LOOPBACK_CONF}"
 echo
 
 # Increase tty font size
