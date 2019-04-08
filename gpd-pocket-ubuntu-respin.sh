@@ -69,6 +69,11 @@ function clean_up() {
 mkdir -p ${MNT_IN}
 mkdir -p ${MNT_OUT}
 mount -o loop "${ISO_IN}" "${MNT_IN}"
+if [ $? -ne 0 ]; then
+  echo "ERROR! Unable to mount ${ISO_IN}"
+  clean_up
+  exit 1
+fi
 
 FLAVOUR=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f4)
 VERSION=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f5)
