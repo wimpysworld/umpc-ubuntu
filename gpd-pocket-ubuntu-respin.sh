@@ -20,6 +20,10 @@ fi
 GPD="gpd-pocket2"
 ISO_IN="ubuntu-mate-18.04.2-desktop-amd64.iso"
 ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-${GPD}\.iso/")
+if [ -f "${ISO_OUT}" ]; then
+  rm -f "${ISO_OUT}"
+fi
+
 MNT_IN="${HOME}/iso_in"
 MNT_OUT="${HOME}/iso_out"
 SQUASH_IN="${MNT_IN}/casper/filesystem.squashfs"
