@@ -7,13 +7,13 @@ if [ $(id -u) -ne 0 ]; then
 fi
 
 if [ ! -f /usr/lib/ISOLINUX/isohdpfx.bin ]; then
-  echo "ERROR! Unable to find /usr/lib/ISOLINUX/isohdpfx.bin. Please 'apt install isolinux'"
-  exit 1
+  echo "ERROR! Unable to find /usr/lib/ISOLINUX/isohdpfx.bin. Installing now..."
+  apt -y install isolinux
 fi
 
 if [ ! -f /usr/bin/xorriso ]; then
-  echo "ERROR! Unable to find /usr/bin/xorriso. Please 'apt install xorriso'"
-  exit 1
+  echo "ERROR! Unable to find /usr/bin/xorriso. Installing now..."
+  apt -y install xorriso
 fi
 
 # Set to either "gpd-pocket" or "gpd-pocket2"
