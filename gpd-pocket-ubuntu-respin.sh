@@ -1,22 +1,6 @@
 #!/usr/bin/env bash
 
-# Make sure we are root.
-if [ $(id -u) -ne 0 ]; then
-  echo "ERROR! You must be root to run $(basename $0)"
-  exit 1
-fi
-
-if [ ! -f /usr/lib/ISOLINUX/isohdpfx.bin ]; then
-  echo "ERROR! Unable to find /usr/lib/ISOLINUX/isohdpfx.bin. Installing now..."
-  apt -y install isolinux
-fi
-
-if [ ! -f /usr/bin/xorriso ]; then
-  echo "ERROR! Unable to find /usr/bin/xorriso. Installing now..."
-  apt -y install xorriso
-fi
-
-usage() {
+function usage() {
     echo
     echo "NAME"
     echo "    $(basename ${0}) - Apply GPD device modifications to an Ubuntu .iso image."
@@ -34,8 +18,52 @@ usage() {
     exit
 }
 
-GPD=""
+# Copy file from /data to it's intended location
+function inject_data() {
+  local TARGET_FILE="${1}"
+  local TARGET_DIR=$(dirname "${TARGET_FILE}")
+  if [ -n "${2}" ] && [ -f "${2}" ]; then
+    local SOURCE_FILE="${2}"
+  else
+    local SOURCE_FILE="data/$(basename ${TARGET_FILE})"
+  fi
 
+  echo " - Injecting ${TARGET_FILE}"
+
+  if [ ! -d "${TARGET_DIR}" ]; then
+    mkdir -p "${TARGET_DIR}"
+  fi
+  
+  if [ -f "${SOURCE_FILE}" ]; then
+    cp "${SOURCE_FILE}" "${TARGET_FILE}"
+  fi
+}
+
+function clean_up() {
+  echo "Cleaning up..."
+  echo "  - ${MNT_IN}"
+  rm -rf "${MNT_IN}"
+  echo "  - ${MNT_OUT}"
+  rm -rf "${MNT_OUT}"
+}
+
+# Make sure we are root.
+if [ $(id -u) -ne 0 ]; then
+  echo "ERROR! You must be root to run $(basename $0)"
+  exit 1
+fi
+
+if [ ! -f /usr/lib/ISOLINUX/isohdpfx.bin ]; then
+  echo "ERROR! Unable to find /usr/lib/ISOLINUX/isohdpfx.bin. Installing now..."
+  apt -y install isolinux
+fi
+
+if [ ! -f /usr/bin/xorriso ]; then
+  echo "ERROR! Unable to find /usr/bin/xorriso. Installing now..."
+  apt -y install xorriso
+fi
+
+GPD=""
 OPTSTRING=d:h
 while getopts ${OPTSTRING} OPT; do
     case ${OPT} in
@@ -85,35 +113,6 @@ GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
 XRANDR_SCRIPT="${SQUASH_OUT}/usr/bin/gpd-display-scaler"
 XRANDR_DESKTOP="${SQUASH_OUT}/etc/xdg/autostart/gpd-display-scaler.desktop"
-
-# Copy file from /data to it's intended location
-function inject_data() {
-  local TARGET_FILE="${1}"
-  local TARGET_DIR=$(dirname "${TARGET_FILE}")
-  if [ -n "${2}" ] && [ -f "${2}" ]; then
-    local SOURCE_FILE="${2}"
-  else
-    local SOURCE_FILE="data/$(basename ${TARGET_FILE})"
-  fi
-
-  echo " - Injecting ${TARGET_FILE}"
-
-  if [ ! -d "${TARGET_DIR}" ]; then
-    mkdir -p "${TARGET_DIR}"
-  fi
-  
-  if [ -f "${SOURCE_FILE}" ]; then
-    cp "${SOURCE_FILE}" "${TARGET_FILE}"
-  fi
-}
-
-function clean_up() {
-  echo "Cleaning up..."
-  echo "  - ${MNT_IN}"
-  rm -rf "${MNT_IN}"
-  echo "  - ${MNT_OUT}"
-  rm -rf "${MNT_OUT}"
-}
 
 # Copy the contents of the ISO
 mkdir -p ${MNT_IN}
