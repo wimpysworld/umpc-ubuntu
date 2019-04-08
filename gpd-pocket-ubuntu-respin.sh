@@ -16,9 +16,55 @@ if [ ! -f /usr/bin/xorriso ]; then
   apt -y install xorriso
 fi
 
-# Set to either "gpd-pocket" or "gpd-pocket2"
-GPD="gpd-pocket2"
-ISO_IN="ubuntu-mate-18.04.2-desktop-amd64.iso"
+usage() {
+    echo
+    echo "NAME"
+    echo "    $(basename ${0}) - Apply GPD device modifications to an Ubuntu .iso image."
+    echo
+    echo "SYNOPSIS"
+    echo "    $(basename ${0}) [ options ] [ ubuntu iso image ]"   
+    echo
+    echo "OPTIONS"
+    echo "    -d"
+    echo "        device modifications to apply to the iso image, can be 'gpd-pocket' or 'gpd-pocket-2'"
+    echo
+    echo "    -h"
+    echo "        display this help and exit"
+    echo
+    exit
+}
+
+GPD=""
+
+OPTSTRING=d:h
+while getopts ${OPTSTRING} OPT; do
+    case ${OPT} in
+        d) GPD="${OPTARG}";;
+        h) usage;;
+        *) usage;;
+    esac
+done
+shift "$(( $OPTIND - 1 ))"
+ISO_IN="${@}"
+
+if [ -z "${GPD}" ]; then
+    echo "ERROR! You must supply the name of the device you want to apply modification for."
+    usage
+elif [ "${GPD}" != "gpd-pocket" ] && [ "${GPD}" != "gpd-pocket2" ]; then
+    echo "ERROR! Unknown device name given."
+    usage
+fi
+
+if [ -z "${ISO_IN}" ]; then
+    echo "ERROR! You must provide the filename of an Ubuntu iso image."
+    usage
+fi
+
+if [ ! -f "${ISO_IN}" ]; then
+    echo "ERROR! Can not access ${ISO_IN}."
+    exit
+fi
+
 ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-${GPD}\.iso/")
 if [ -f "${ISO_OUT}" ]; then
   rm -f "${ISO_OUT}"
