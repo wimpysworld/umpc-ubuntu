@@ -108,11 +108,13 @@ if [ "${GPD}" == "gpd-pocket2" ]; then
 fi
 sed -i 's/quiet splash/video=efifb fbcon=rotate:1 quiet splash/g' "${GRUB_BOOT_CONF}"
 
-echo "${GRUB_DEFAULT_CONF}"
+echo
+echo "Modified : ${GRUB_DEFAULT_CONF}"
 cat "${GRUB_DEFAULT_CONF}"
 echo
 
-echo "${GRUB_BOOT_CONF}"
+echo
+echo "Modified : ${GRUB_BOOT_CONF}"
 cat "${GRUB_BOOT_CONF}"
 echo
 
