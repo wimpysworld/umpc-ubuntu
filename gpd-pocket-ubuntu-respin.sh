@@ -228,4 +228,5 @@ xorriso \
   -volid "${FLAVOUR} ${VERSION} ${GPD}" \
   -o "${ISO_OUT}" "${MNT_OUT}/"
 
+chown -v "${SUDO_USER}":"${SUDO_USER}" "${ISO_OUT}"
 clean_up
