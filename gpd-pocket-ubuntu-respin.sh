@@ -128,8 +128,9 @@ fi
 if [ -f "${MNT_IN}/README.diskdefines" ] && [ -f "${MNT_IN}/casper/filesystem.squashfs" ]; then
   FLAVOUR=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f4)
   VERSION=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f5)
+  QUALITY=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d'-' -f3 | sed 's/amd64//'g | sed 's/ //g')
   CODENAME=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d'"' -f2)
-  echo "Modifying ${FLAVOUR} ${VERSION} (${CODENAME}) for the ${GPD}"
+  echo "Modifying ${FLAVOUR} ${VERSION} ${QUALITY} (${CODENAME}) for the ${GPD}"
 
   rsync -aHAXx --delete \
     --exclude=/casper/filesystem.squashfs \
