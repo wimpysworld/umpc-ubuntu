@@ -75,22 +75,29 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-FLAVOUR=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f4)
-VERSION=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f5)
-CODENAME=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d'"' -f2)
-echo "Modifying ${FLAVOUR} ${VERSION} (${CODENAME})"
+if [ -f "${MNT_IN}/README.diskdefines" ] && [ -f "${MNT_IN}/casper/filesystem.squashfs" ]; then
+  FLAVOUR=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f4)
+  VERSION=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f5)
+  CODENAME=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d'"' -f2)
+  echo "Modifying ${FLAVOUR} ${VERSION} (${CODENAME}) for the ${GPD}"
 
-rsync -aHAXx --delete \
-  --exclude=/casper/filesystem.squashfs \
-  --exclude=/casper/filesystem.squashfs.gpg \
-  --exclude=/md5sum.txt \
-  "${MNT_IN}/" "${MNT_OUT}/"
+  rsync -aHAXx --delete \
+    --exclude=/casper/filesystem.squashfs \
+    --exclude=/casper/filesystem.squashfs.gpg \
+    --exclude=/md5sum.txt \
+    "${MNT_IN}/" "${MNT_OUT}/"
 
-# Extract the contents of the squashfs
-cd "${MNT_OUT}/casper"
-unsquashfs "${SQUASH_IN}"
-cd -
-umount -l "${MNT_IN}"
+  # Extract the contents of the squashfs
+  cd "${MNT_OUT}/casper"
+  unsquashfs "${SQUASH_IN}"
+  cd -
+  umount -l "${MNT_IN}"
+else
+  echo "ERROR! This doesn't look like an Ubuntu iso image."
+  umount -l "${MNT_IN}"
+  clean_up
+  exit 1
+fi
 
 # Enable Intel SNA, DRI3 and TearFree.
 inject_data "${INTEL_CONF}"
