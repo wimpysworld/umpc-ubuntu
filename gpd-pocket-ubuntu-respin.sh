@@ -19,7 +19,6 @@ fi
 # Set to either "gpd-pocket" or "gpd-pocket2"
 GPD="gpd-pocket2"
 ISO_IN="ubuntu-mate-18.04.2-desktop-amd64.iso"
-ISO_VER=$(echo ${ISO_IN} | cut -d'-' -f3)
 ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-${GPD}\.iso/")
 MNT_IN="${HOME}/iso_in"
 MNT_OUT="${HOME}/iso_out"
@@ -62,6 +61,12 @@ function inject_data() {
 mkdir -p ${MNT_IN}
 mkdir -p ${MNT_OUT}
 mount -o loop "${ISO_IN}" "${MNT_IN}"
+
+FLAVOUR=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f4)
+VERSION=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f5)
+CODENAME=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d'"' -f2)
+echo "Modifying ${FLAVOUR} ${VERSION} (${CODENAME})"
+
 rsync -aHAXx --delete \
   --exclude=/casper/filesystem.squashfs \
   --exclude=/casper/filesystem.squashfs.gpg \
@@ -148,7 +153,7 @@ xorriso \
   -no-emul-boot \
   -isohybrid-gpt-basdat \
   -isohybrid-apm-hfsplus \
-  -volid "${GPD} ${ISO_VER}" \
+  -volid "${FLAVOUR} ${VERSION} ${GPD}" \
   -o "${ISO_OUT}" "${MNT_OUT}/"
 
 # Clean up
