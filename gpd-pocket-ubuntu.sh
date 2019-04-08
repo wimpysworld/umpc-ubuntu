@@ -17,7 +17,13 @@ XRANDR_DESKTOP="/etc/xdg/autostart/gpd-display-scaler.desktop"
 function inject_data() {
   local TARGET_FILE="${1}"
   local TARGET_DIR=$(dirname "${TARGET_FILE}")
-  local SOURCE_FILE="data/$(basename ${TARGET_FILE})"
+  if [ -n "${2}" ] && [ -f "${2}" ]; then
+    local SOURCE_FILE="${2}"
+  else
+    local SOURCE_FILE="data/$(basename ${TARGET_FILE})"
+  fi
+
+  echo " - Injecting ${TARGET_FILE}"
 
   if [ ! -d "${TARGET_DIR}" ]; then
     mkdir -p "${TARGET_DIR}"
