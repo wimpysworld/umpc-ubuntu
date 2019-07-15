@@ -1,12 +1,12 @@
-# GPD Pocket and GPD Pocket 2 hardware configuration for Ubuntu
+# GPD Pocket, Pocket 2 & MicroPC hardware configuration for Ubuntu
 
-Here are a couple of scripts for [GPD Pocket](https://gpd.hk/gpdpocket) and
-[GPD Pocket 2](https://gpd.hk/gpdpocket2) Ubuntu users.
+Here are a couple of scripts for [GPD Pocket](https://gpd.hk/gpdpocket),
+[GPD Pocket 2](https://gpd.hk/gpdpocket2) and [GPD MicroPC](https://gpd.hk/gpdmicropc) Ubuntu users.
 
   * `gpd-pocket-ubuntu.sh`: install the required hardware configuration on a running Ubuntu install.
   * `gpd-pocket-ubuntu-respin.sh`: modify an existing Ubuntu .iso image with GPD specific hardware configuration.
 
-The GPD Pockets were a very successful crowd funded netbook style laptops 
+The GPD have very successfully crowd funded netbook style laptops 
 featuring a high resolution 7" touch display housed in an aluminium alloy 
 body. The original GPD Pocket (2017) offered an Ubuntu pre-load option while 
 the GPD Pocket 2 (2018) is available with Windows 10 only. These scripts for
@@ -69,9 +69,9 @@ Pocket and GPD Pocket 2 adds the following tweaks:
 
 ## The Scripts
 
-**NOTE!** These scripts have been tested on
-[Ubuntu MATE](https://ubuntu-mate.org) 18.04.2, 18.10 and 19.04. All Ubuntu
-flavours should work although if you uses Wayland your mileage may vary.
+These scripts have been tested on [Ubuntu MATE](https://ubuntu-mate.org) 18.04.2,
+18.10 and 19.04. All Ubuntu flavours should work although if you use Wayland your
+mileage may vary.
 
 ### gpd-pocket-ubuntu.sh
 
@@ -86,8 +86,8 @@ sudo ./gpd-pocket-ubuntu.sh enable || disable
 
 You must supply one of the following modes of operation
 
-  * `enable`  : apply the GPD Pocket hardware configuration
-  * `disable` : remove the GPD Pocket hardware configuration
+  * `enable`  : apply the GPD hardware configuration
+  * `disable` : remove the GPD hardware configuration
   * `help`    : This help.
 
 ### gpd-pocket-ubuntu-respin.sh
@@ -100,18 +100,23 @@ cd gpd-pocket2-ubuntu
   * Download an .iso image for one of the Ubuntu 18.04.2 (or newer) flavours.
 
 ```
-sudo ./gpd-pocket-ubuntu-respin.sh -d gpd-pocket || gpd-pocket2 ubuntu-mate-18.04.2-desktop-amd64.iso
+sudo ./gpd-pocket-ubuntu-respin.sh -d gpd-pocket ubuntu-mate-18.04.2-desktop-amd64.iso
+sudo ./gpd-pocket-ubuntu-respin.sh -d gpd-pocket2 ubuntu-mate-18.04.2-desktop-amd64.iso
 ```
 
 A new .iso will be created that includes the additional hardware tweaks
-required by the GPD Pocket or GPD Pocket 2.
+required by the selected GPD device.
 
 ## Accessing GPD boot menus
 
 ### GPD Pocket
 
-Switch the GPD Pocket on, immediately hold the <kbd>Fn</kbd> key and tapping the <kbd>F7</kbd> key until the Boot Manager screen appears.
+Switch the GPD Pocket on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7</kbd> key until the Boot Manager screen appears.
 
 ### GPD Pocket 2
 
-Switch the GPD Pocket 2 on, immediately hold the <kbd>Fn</kbd> key and tapping the <kbd>F12</kbd> key until the Boot Manager screen appears.
+Switch the GPD Pocket 2 on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F12</kbd> key until the Boot Manager screen appears.
+
+### GPD MicroPC
+
+Switch the GPD MicroPC on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7</kbd> key until the Boot Manager screen appears.
