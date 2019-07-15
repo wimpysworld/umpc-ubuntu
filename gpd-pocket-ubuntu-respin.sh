@@ -6,7 +6,7 @@ function usage() {
     echo "    $(basename ${0}) - Apply GPD device modifications to an Ubuntu .iso image."
     echo
     echo "SYNOPSIS"
-    echo "    $(basename ${0}) [ options ] [ ubuntu iso image ]"   
+    echo "    $(basename ${0}) [ options ] [ ubuntu iso image ]"
     echo
     echo "OPTIONS"
     echo "    -d"
