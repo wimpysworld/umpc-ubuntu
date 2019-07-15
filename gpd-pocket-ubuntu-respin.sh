@@ -10,7 +10,7 @@ function usage() {
     echo
     echo "OPTIONS"
     echo "    -d"
-    echo "        device modifications to apply to the iso image, can be 'gpd-pocket' or 'gpd-pocket-2'"
+    echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket-2' or 'gpd-micropc'"
     echo
     echo "    -h"
     echo "        display this help and exit"
@@ -78,7 +78,7 @@ ISO_IN="${@}"
 if [ -z "${GPD}" ]; then
     echo "ERROR! You must supply the name of the device you want to apply modification for."
     usage
-elif [ "${GPD}" != "gpd-pocket" ] && [ "${GPD}" != "gpd-pocket2" ]; then
+elif [ "${GPD}" != "gpd-pocket" ] && [ "${GPD}" != "gpd-pocket2" ] && [ "${GPD}" != "gpd-micropc" ]; then
     echo "ERROR! Unknown device name given."
     usage
 fi

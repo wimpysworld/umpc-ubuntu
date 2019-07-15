@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Set to either "gpd-pocket" or "gpd-pocket2"
+# Set to either "gpd-pocket", "gpd-pocket2" or "gpd-micropc"
 GPD="gpd-pocket2"
 XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${GPD}-intel.conf"
@@ -34,7 +34,7 @@ function inject_data() {
   fi
 }
 
-function enable_gpd_pocket_config() {
+function enable_gpd_config() {
   # Enable Intel SNA, DRI3 and TearFree.
   inject_data "${INTEL_CONF}"
 
@@ -73,10 +73,10 @@ function enable_gpd_pocket_config() {
   # Increase tty font size
   sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
 
-  echo "GPD Pocket hardware configuration is applied. Please reboot to complete the setup."
+  echo "GPD hardware configuration is applied. Please reboot to complete the setup."
 }
 
-function disable_gpd_pocket_config() {
+function disable_gpd_config() {
   # Remove the GPD Pocket hardware configuration
   for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${BRCM4356_CONF} ${XRANDR_SCRIPT} ${XRANDR_DESKTOP}; do
     if [ -f "${CONFIG}" ]; then
@@ -93,7 +93,7 @@ function disable_gpd_pocket_config() {
   # Restore tty font size
   sed -i 's/FONTSIZE=16x32"/FONTSIZE="8x16"/' "${CONSOLE_CONF}"
 
-  echo "GPD Pocket hardware configuration is removed. Please reboot to complete the setup."
+  echo "GPD hardware configuration is removed. Please reboot to complete the setup."
 }
 
 function usage() {
@@ -131,9 +131,9 @@ fi
 
 case "${MODE}" in
   -d|--disable|disable)
-    disable_gpd_pocket_config;;
+    disable_gpd_config;;
   -e|--enable|enable)
-    enable_gpd_pocket_config;;
+    enable_gpd_config;;
   -h|--h|-help|--help|-?|help)
     usage;;
   *)
