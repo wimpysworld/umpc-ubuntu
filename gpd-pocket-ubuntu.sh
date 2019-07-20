@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-# Set to either "gpd-pocket", "gpd-pocket2" or "gpd-micropc"
-GPD="gpd-pocket2"
+# Set to either "gpd-pocket", "gpd-pocket2", "gpd-micropc" or "topjoy-falcon"
+UMPC="gpd-pocket2"
 XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
-INTEL_CONF="${XORG_CONF_PATH}/20-${GPD}-intel.conf"
-MONITOR_CONF="${XORG_CONF_PATH}/40-${GPD}-monitor.conf"
-TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${GPD}-trackpoint.conf"
-TOUCH_RULES="/etc/udev/rules.d/99-gpd-touch.rules"
+INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
+MONITOR_CONF="${XORG_CONF_PATH}/40-${UMPC}-monitor.conf"
+TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
+TOUCH_RULES="/etc/udev/rules.d/99-${UMPC}-touch.rules"
 BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="/etc/default/grub"
 CONSOLE_CONF="/etc/default/console-setup"
-XRANDR_SCRIPT="/usr/bin/gpd-display-scaler"
-XRANDR_DESKTOP="/etc/xdg/autostart/gpd-display-scaler.desktop"
+XRANDR_SCRIPT="/usr/bin/umpc-display-scaler"
+XRANDR_DESKTOP="/etc/xdg/autostart/umpc-display-scaler.desktop"
 
 # Copy file from /data to it's intended location
 function inject_data() {
@@ -34,7 +34,7 @@ function inject_data() {
   fi
 }
 
-function enable_gpd_config() {
+function enable_umpc_config() {
   # Enable Intel SNA, DRI3 and TearFree.
   inject_data "${INTEL_CONF}"
 
@@ -55,7 +55,7 @@ function enable_gpd_config() {
   inject_data "${XRANDR_DESKTOP}"
 
   # Add BRCM4356 firmware configuration
-  if [ "${GPD}" == "gpd-pocket" ]; then
+  if [ "${UMPC}" == "gpd-pocket" ]; then
     inject_data "${BRCM4356_CONF}"
     # Reload the brcmfmac kernel module
     modprobe -r brcmfmac
@@ -65,7 +65,7 @@ function enable_gpd_config() {
   # Rotate the framebuffer
   sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
   sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/' "${GRUB_DEFAULT_CONF}"
-  if [ "${GPD_POCKET}" == "gpd-pocket2" ]; then
+  if [ "${UMPC}" == "gpd-pocket2" ]; then
     grep -qxF 'GRUB_GFXMODE=1200x1920x32' "${GRUB_DEFAULT_CONF}" || echo 'GRUB_GFXMODE=1200x1920x32' >> "${GRUB_DEFAULT_CONF}"
   fi
   update-grub
@@ -73,11 +73,11 @@ function enable_gpd_config() {
   # Increase tty font size
   sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
 
-  echo "GPD hardware configuration is applied. Please reboot to complete the setup."
+  echo "UMPC hardware configuration is applied. Please reboot to complete the setup."
 }
 
-function disable_gpd_config() {
-  # Remove the GPD Pocket hardware configuration
+function disable_umpc_config() {
+  # Remove the UMPC Pocket hardware configuration
   for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${BRCM4356_CONF} ${XRANDR_SCRIPT} ${XRANDR_DESKTOP}; do
     if [ -f "${CONFIG}" ]; then
       rm -fv "${CONFIG}"
@@ -93,7 +93,7 @@ function disable_gpd_config() {
   # Restore tty font size
   sed -i 's/FONTSIZE=16x32"/FONTSIZE="8x16"/' "${CONSOLE_CONF}"
 
-  echo "GPD hardware configuration is removed. Please reboot to complete the setup."
+  echo "UMPC hardware configuration is removed. Please reboot to complete the setup."
 }
 
 function usage() {
@@ -131,9 +131,9 @@ fi
 
 case "${MODE}" in
   -d|--disable|disable)
-    disable_gpd_config;;
+    disable_umpc_config;;
   -e|--enable|enable)
-    enable_gpd_config;;
+    enable_umpc_config;;
   -h|--h|-help|--help|-?|help)
     usage;;
   *)

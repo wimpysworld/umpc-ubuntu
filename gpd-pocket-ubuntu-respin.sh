@@ -3,14 +3,14 @@
 function usage() {
     echo
     echo "NAME"
-    echo "    $(basename ${0}) - Apply GPD device modifications to an Ubuntu .iso image."
+    echo "    $(basename ${0}) - Apply GPD/TopJoy device modifications to an Ubuntu .iso image."
     echo
     echo "SYNOPSIS"
     echo "    $(basename ${0}) [ options ] [ ubuntu iso image ]"
     echo
     echo "OPTIONS"
     echo "    -d"
-    echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket2' or 'gpd-micropc'"
+    echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket2', 'gpd-micropc' or 'topjoy-falcon'"
     echo
     echo "    -h"
     echo "        display this help and exit"
@@ -63,11 +63,11 @@ if [ ! -f /usr/bin/xorriso ]; then
   apt -y install xorriso
 fi
 
-GPD=""
+UMPC=""
 OPTSTRING=d:h
 while getopts ${OPTSTRING} OPT; do
     case ${OPT} in
-        d) GPD="${OPTARG}";;
+        d) UMPC="${OPTARG}";;
         h) usage;;
         *) usage;;
     esac
@@ -75,10 +75,10 @@ done
 shift "$(( $OPTIND - 1 ))"
 ISO_IN="${@}"
 
-if [ -z "${GPD}" ]; then
-    echo "ERROR! You must supply the name of the device you want to apply modification for."
+if [ -z "${UMPC}" ]; then
+    echo "ERROR! You must supply the name of the device you want to apply modifications for."
     usage
-elif [ "${GPD}" != "gpd-pocket" ] && [ "${GPD}" != "gpd-pocket2" ] && [ "${GPD}" != "gpd-micropc" ]; then
+elif [ "${UMPC}" != "gpd-pocket" ] && [ "${UMPC}" != "gpd-pocket2" ] && [ "${UMPC}" != "gpd-micropc" ]  && [ "${UMPC}" != "topjoy-falcon" ]; then
     echo "ERROR! Unknown device name given."
     usage
 fi
@@ -93,7 +93,7 @@ if [ ! -f "${ISO_IN}" ]; then
     exit
 fi
 
-ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-${GPD}\.iso/")
+ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-${UMPC}\.iso/")
 if [ -f "${ISO_OUT}" ]; then
   rm -f "${ISO_OUT}"
 fi
@@ -103,17 +103,17 @@ MNT_OUT="${HOME}/iso_out"
 SQUASH_IN="${MNT_IN}/casper/filesystem.squashfs"
 SQUASH_OUT="${MNT_OUT}/casper/squashfs-root"
 XORG_CONF_PATH="${SQUASH_OUT}/usr/share/X11/xorg.conf.d"
-INTEL_CONF="${XORG_CONF_PATH}/20-${GPD}-intel.conf"
-MONITOR_CONF="${XORG_CONF_PATH}/40-${GPD}-monitor.conf"
-TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${GPD}-trackpoint.conf"
-TOUCH_RULES="${SQUASH_OUT}/etc/udev/rules.d/99-${GPD}-touch.rules"
+INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
+MONITOR_CONF="${XORG_CONF_PATH}/40-${UMPC}-monitor.conf"
+TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
+TOUCH_RULES="${SQUASH_OUT}/etc/udev/rules.d/99-${UMPC}-touch.rules"
 BRCM4356_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="${SQUASH_OUT}/etc/default/grub"
 GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
 GRUB_LOOPBACK_CONF="${MNT_OUT}/boot/grub/loopback.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
-XRANDR_SCRIPT="${SQUASH_OUT}/usr/bin/gpd-display-scaler"
-XRANDR_DESKTOP="${SQUASH_OUT}/etc/xdg/autostart/gpd-display-scaler.desktop"
+XRANDR_SCRIPT="${SQUASH_OUT}/usr/bin/umpc-display-scaler"
+XRANDR_DESKTOP="${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
 
 # Copy the contents of the ISO
 mkdir -p ${MNT_IN}
@@ -130,7 +130,7 @@ if [ -f "${MNT_IN}/README.diskdefines" ] && [ -f "${MNT_IN}/casper/filesystem.sq
   VERSION=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f5)
   QUALITY=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d'-' -f3 | sed 's/amd64//'g | sed 's/ //g')
   CODENAME=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d'"' -f2)
-  echo "Modifying ${FLAVOUR} ${VERSION} ${QUALITY} (${CODENAME}) for the ${GPD}"
+  echo "Modifying ${FLAVOUR} ${VERSION} ${QUALITY} (${CODENAME}) for the ${UMPC}"
 
   rsync -aHAXx --delete \
     --exclude=/casper/filesystem.squashfs \
@@ -167,14 +167,14 @@ inject_data "${XRANDR_SCRIPT}"
 inject_data "${XRANDR_DESKTOP}"
 
 # Add BRCM4356 firmware configuration
-if [ "${GPD}" == "gpd-pocket" ]; then
+if [ "${UMPC}" == "gpd-pocket" ]; then
   inject_data "${BRCM4356_CONF}"
 fi
 
 # Rotate the framebuffer
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
 sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/' "${GRUB_DEFAULT_CONF}"
-if [ "${GPD}" == "gpd-pocket2" ]; then
+if [ "${UMPC}" == "gpd-pocket2" ]; then
   grep -qxF 'GRUB_GFXMODE=1200x1920x32' "${GRUB_DEFAULT_CONF}" || echo 'GRUB_GFXMODE=1200x1920x32' >> "${GRUB_DEFAULT_CONF}"
 fi
 sed -i 's/quiet splash/video=efifb fbcon=rotate:1 quiet splash/g' "${GRUB_BOOT_CONF}"
@@ -232,7 +232,7 @@ xorriso \
   -no-emul-boot \
   -isohybrid-gpt-basdat \
   -isohybrid-apm-hfsplus \
-  -volid "${FLAVOUR} ${VERSION} ${GPD}" \
+  -volid "${FLAVOUR} ${VERSION} ${UMPC}" \
   -o "${ISO_OUT}" "${MNT_OUT}/"
 
 chown -v "${SUDO_USER}":"${SUDO_USER}" "${ISO_OUT}"
