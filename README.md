@@ -117,12 +117,14 @@ required by the selected UMPC device.
 
 ### GPD Pocket & GPD MicroPC
 
-Switch the GPD Pocket on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7</kbd> key until the Boot Manager screen appears.
+Switch the devcice on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7</kbd> key until the Boot Manager screen appears.
 
-### GPD Pocket 2
+### GPD Pocket 2 & TopJoy Falcon
 
-Switch the GPD Pocket 2 on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F12</kbd> key until the Boot Manager screen appears.
+Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F12</kbd> key until the Boot Manager screen appears.
+
+## Accessing UMPC BIOS menus
 
 ### TopJoy Falcon
 
-Switch the TopJoy Falcon on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F2</kbd> key until the BIOS appears. Now configure the boot order.
+Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F2</kbd> key until the BIOS appears.
