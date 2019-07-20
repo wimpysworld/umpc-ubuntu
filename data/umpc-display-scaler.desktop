@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=GPD Display Scaler
-Exec=gpd-display-scaler
+Name=UMPC Display Scaler
+Exec=umpc-display-scaler
 Icon=user-desktop
 Terminal=false
 Type=Application
@@ -8,4 +8,4 @@ Categories=GTK;Settings;
 StartupNotify=false
 OnlyShowIn=MATE;
 NoDisplay=true
-Comment=Scale up the internal display on GPD laptops. Disable this Startup Program and log out to restore the native resolution.
+Comment=Scale up the internal display on UMPC laptops. Disable this Startup Program and log out to restore the native resolution.
