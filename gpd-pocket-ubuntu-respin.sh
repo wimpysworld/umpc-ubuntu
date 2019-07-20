@@ -10,7 +10,6 @@ function usage() {
     echo
     echo "OPTIONS"
     echo "    -d"
-    echo "        device modifications to apply to the iso image, can be 'gpd-pocket' or 'gpd-pocket2'"
     echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket2' or 'gpd-micropc'"
     echo
     echo "    -h"
