@@ -214,6 +214,7 @@ cd "${MNT_OUT}"
 find . -type f -print0 | xargs -0 md5sum >> "${MNT_OUT}/md5sum.txt"
 cd -
 
+VOL_ID=$(echo ${FLAVOUR} ${VERSION} ${UMPC} | cut -c1-31)
 rm -f "${ISO_OUT}" 2>/dev/null
 xorriso \
   -as mkisofs \
@@ -232,7 +233,7 @@ xorriso \
   -no-emul-boot \
   -isohybrid-gpt-basdat \
   -isohybrid-apm-hfsplus \
-  -volid "${FLAVOUR} ${VERSION} ${UMPC}" \
+  -volid "${VOL_ID}" \
   -o "${ISO_OUT}" "${MNT_OUT}/"
 
 chown -v "${SUDO_USER}":"${SUDO_USER}" "${ISO_OUT}"
