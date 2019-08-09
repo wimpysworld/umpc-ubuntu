@@ -2,6 +2,8 @@
 
 PRIMARY_RESOLUTION=$(xrandr | grep "connected primary" | cut -d' ' -f4 | cut -d'+' -f1 | sed 's/ //g')
 if [ "${PRIMARY_RESOLUTION}" == "1920x1200" ]; then
-  PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g')
-  xrandr --output ${PRIMARY_DISPLAY} --scale 0.64x0.64
+  PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g' | sed 's/-//g')
+  if [ "${PRIMARY_DISPLAY}" == "eDP1" ] || [ "${PRIMARY_DISPLAY}" == "DSI1" ]; then
+    xrandr --output ${PRIMARY_DISPLAY} --scale 0.64x0.64
+  fi
 fi
