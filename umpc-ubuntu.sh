@@ -3,6 +3,7 @@
 # Set to either "gpd-pocket", "gpd-pocket2", "gpd-micropc" or "topjoy-falcon"
 UMPC="gpd-pocket2"
 XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
+GDM3_CONF="/var/lib/gdm3/.config/monitors.xml"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
 MONITOR_CONF="${XORG_CONF_PATH}/40-${UMPC}-monitor.conf"
 TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
@@ -40,6 +41,8 @@ function enable_umpc_config() {
 
   # Rotate the monitor.
   inject_data "${MONITOR_CONF}"
+  # Place config for rotare GDM3.
+  inject_data "${GDM3_CONF}"
 
   # Scroll while holding down the right track point button
   inject_data "${TRACKPOINT_CONF}"
