@@ -103,6 +103,7 @@ MNT_OUT="${HOME}/iso_out"
 SQUASH_IN="${MNT_IN}/casper/filesystem.squashfs"
 SQUASH_OUT="${MNT_OUT}/casper/squashfs-root"
 XORG_CONF_PATH="${SQUASH_OUT}/usr/share/X11/xorg.conf.d"
+GDM3_CONF="/var/lib/gdm3/.config/monitors.xml"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
 MONITOR_CONF="${XORG_CONF_PATH}/40-${UMPC}-monitor.conf"
 TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
@@ -155,6 +156,8 @@ inject_data "${INTEL_CONF}"
 
 # Rotate the monitor.
 inject_data "${MONITOR_CONF}"
+# Place config for rotare GDM3.
+inject_data "${GDM3_CONF}"
 
 # Scroll while holding down the right track point button
 inject_data "${TRACKPOINT_CONF}"
