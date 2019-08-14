@@ -1,9 +1,46 @@
 #!/usr/bin/env bash
 
+SCALE_FACTOR="0.64"
+
+if [ -f ~/.umpc-display-scaler ]; then
+    SCALE_FACTOR=$(cat ~/.umpc-display-scaler)
+fi
+
+
+if [ $# -gt 0 ]; then
+    if [ $1 == "-?" ] || [ $1 == "--help" ]; then
+        echo "NAME:"
+        echo "  umpc-display-scaler - Scales the resolution of small screens"
+        echo ""
+        echo "USAGE:"
+        echo "  umpc-display-scaler [SCALE_FACTOR]"
+        echo ""
+        echo "CONFIGURATION:"
+        echo "  Add a SCALE_FACTOR to ~/.umpc-display-scaler to override default 0.64"
+        echo ""
+        echo "ARGUMENTS:"
+        echo "  SCALE_FACTOR - Should be a decimal somewhat around 1. Default value 0.64"
+        echo ""
+        exit 0
+    fi
+    SCALE_FACTOR=$1
+fi
+
+if [[ ! "$SCALE_FACTOR" =~ ^[01]\.[0-9]+$ ]]; then
+    echo "Invalid scale factor"
+    echo ""
+    exit 1
+fi
+
+SCALE_FACTOR="${SCALE_FACTOR}x${SCALE_FACTOR}"
+
 PRIMARY_RESOLUTION=$(xrandr | grep "connected primary" | cut -d' ' -f4 | cut -d'+' -f1 | sed 's/ //g')
-if [ "${PRIMARY_RESOLUTION}" == "1920x1200" ]; then
+if [ $# -gt 0 ] || [ "${PRIMARY_RESOLUTION}" == "1920x1200" ]; then
   PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g' | sed 's/-//g')
   if [ "${PRIMARY_DISPLAY}" == "eDP1" ] || [ "${PRIMARY_DISPLAY}" == "DSI1" ]; then
-    xrandr --output ${PRIMARY_DISPLAY} --scale 0.64x0.64
+    xrandr --output ${PRIMARY_DISPLAY} --scale "$SCALE_FACTOR"
+  else
+    echo "Using external display"
+    exit 1
   fi
 fi
