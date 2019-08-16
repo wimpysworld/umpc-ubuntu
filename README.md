@@ -2,7 +2,8 @@
 
 Here are a couple of scripts for Ultra Mobile PCs (UMPC) such as the
 [GPD Pocket](https://gpd.hk/gpdpocket), [GPD Pocket 2](https://gpd.hk/gpdpocket2),
-[GPD MicroPC](https://gpd.hk/gpdmicropc) and [Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
+[GPD MicroPC](https://gpd.hk/gpdmicropc), [GPD WIN 2](https://gpd.hk/gdpwin2) and
+[Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
 for Ubuntu users.
 
   * `umpc-ubuntu.sh`: install the required hardware configuration on a running Ubuntu install.
@@ -23,10 +24,12 @@ others.
 The Ubuntu MATE team offers a bespoke images for the
 [GPD Pocket](https://gpd.hk/gpdpocket),
 [GPD Pocket 2](https://gpd.hk/gpdpocket2),
+[GPD WIN 2](https://gpd.hk/gdpwin2),
 [GPD MicroPC](https://gpd.hk/gpdmicropc) and
 [Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
 that include the hardware specific tweaks to get these devices working
-*"out of the box"* without any faffing about.
+*"out of the box"* without any faffing about. Some models of the OneMix
+Yoga devices are also supported.
 
   * <https://ubuntu-mate.org/download/>
 
@@ -37,7 +40,7 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
   * Enable **frame buffer and Xorg display rotation**.
     * Supports `modesetting` *and* `xorg-video-intel` display drivers.
   * Enable **TearFree rendering by default**.
-  * Enable touch screen rotation for Xorg and Wayland.  
+  * Enable touch screen rotation for Xorg and Wayland.
   * Enable **scroll whell emulation** for Xorg.
     * While holding down the **right track point button** on the Pocket, Pocket 2 & Topjoy Falcon.
     * While holding down the **centre track point button** on the MicroPC.
@@ -46,7 +49,7 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * Results in an effective resolution of 1280x800 to make the small display panels easily readable.
     * Simple to disable if you want to restore full resolution.
   * **GRUB is usable post-install**.
-    * GPD Pocket, MicroPC & TopJoy Falcon GRUB is rotated 90 degress, but functional.
+    * GPD Pocket, WIN 2, MicroPC & TopJoy Falcon GRUB is rotated 90 degress, but functional.
     * GPD Pocket 2 GRUB is correctly rotated and functional.
   * GPD Pocket BRMC4356 WiFi firmware enabled by default.
   * GPD Pocket fan control kernel module enable by default.
@@ -131,11 +134,21 @@ Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F2
 
 ## Device matrix
 
-|    Device     |    Monitor   | Resolution | Rotation |                 Trackpoint                |          Touch Screen         |   Kernel  |   Ubuntu   |
-| ------------- | ------------ | ---------- | -------- | ----------------------------------------- | ----------------------------- | --------- | ---------- |
-| GPD Pocket    | DSI-1 / DSI1 | 1200x1920  | Right    | SINO WEALTH Gaming Keyboard               | Goodix Capacitive TouchScreen | >= 4.18   | >= 18.04.2 |
-| GPD Pocket 2  | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18   | >= 18.04.2 |
-| GPD MicroPC   | DSI-1 / DSI1 | 720x1280   | Right    | AMR-4630-XXX-0- 0-1023 USB KEYBOARD Mouse | n/a                           | >= 5.2    | >= 19.10   |
-| TopJoy Falcon | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18   | >= 18.04.2 |
-| OneMix Yoga   | ?            | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18   | >= 18.04.2 |
-| OneMix Yoga 2 | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18   | >= 18.04.2 |
+Please help complete this table by running the following commands from an Ubuntu Live image:
+
+```
+xrandr --query
+xinput2
+```
+
+|      Device      |    Monitor   | Resolution | Rotation |                 Trackpoint                |          Touch Screen         | Kernel Req | Ubuntu Req |    Common     |
+|   -------------  | ------------ | ---------- | -------- | ----------------------------------------- | ----------------------------- | ---------- | ---------- | ------------- |
+| GPD Pocket       | DSI-1 / DSI1 | 1200x1920  | Right    | SINO WEALTH Gaming Keyboard               | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket    |
+| GPD Pocket 2     | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
+| GPD WIN 2        | eDP-1 / eDP1 | 720x1280   | Right    |                                           | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
+| GPD MicroPC      | DSI-1 / DSI1 | 720x1280   | Right    | AMR-4630-XXX-0- 0-1023 USB KEYBOARD Mouse | n/a                           | >= 5.2     | >= 19.10   | gpd-micropc   |
+| OneMix Yoga      | ?            | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | ?             |
+| OneMix Yoga 1s   | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
+| OneMix Yoga 2    | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
+| TopJoy Falcon    | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | topjoy-falcon |
+| Chuwi Minibook X | DSI-1 / DSI1 | 1200x1920  | Right    | SIPODEV USB Composite Device Mouse        | ?                             | ?          | ?          | n/a           |
