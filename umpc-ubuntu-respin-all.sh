@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 sudo true
-for ISO in ubuntu-mate-18.04.2-desktop-amd64.iso ubuntu-mate-18.10-desktop-amd64.iso ubuntu-mate-19.04-beta-desktop-amd64.iso; do
-  for POCKET in gpd-pocket gpd-pocket2; do
-    sudo ./gpd-pocket-ubuntu-respin.sh -d ${POCKET} ${ISO}
+for ISO_IN in ubuntu-mate-18.04.3-desktop-amd64.iso; do
+  for UMPC in gpd-pocket gpd-pocket2 gpd-micropc topjoy-falcon; do
+    sudo ./umpc-ubuntu-respin.sh -d ${UMPC} ${ISO_IN}
+    if [ -e ~/Scripts/mate/sign_image.sh ]; then
+      ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-${UMPC}\.iso/")
+      ~/Scripts/mate/sign_image.sh ${ISO_OUT}
+    fi
   done
-done
-
-for POCKET_ISO in *-gpd-pocket*.iso; do
-  ~/Scripts/mate/sign_image.sh ${POCKET_ISO}
 done
