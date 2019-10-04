@@ -1,0 +1,5 @@
+[x.dm.slick-greeter]
+enable-hidpi='on'
+
+[org.mate.interface]
+window-scaling-factor=2
