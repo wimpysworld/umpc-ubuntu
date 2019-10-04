@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Set to either "gpd-pocket", "gpd-pocket2", "gpd-micropc" or "topjoy-falcon"
+# Set to either "gpd-pocket", "gpd-pocket2", "gpd-micropc", "gpd-p2-max" or "topjoy-falcon"
 UMPC="gpd-pocket2"
 XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
