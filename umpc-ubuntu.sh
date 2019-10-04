@@ -12,6 +12,7 @@ GRUB_DEFAULT_CONF="/etc/default/grub"
 CONSOLE_CONF="/etc/default/console-setup"
 XRANDR_SCRIPT="/usr/bin/umpc-display-scaler"
 XRANDR_DESKTOP="/etc/xdg/autostart/umpc-display-scaler.desktop"
+GSCHEMA_OVERRIDE="/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
 
 # Copy file from /data to it's intended location
 function inject_data() {
@@ -49,6 +50,9 @@ function enable_umpc_config() {
   # Reload udev rules
   udevadm control --reload-rules
   udevadm trigger
+
+  # Apply device specific gschema overrides
+  inject_data "${GSCHEMA_OVERRIDE}"
 
   # Scale up the primary display to increase readability.
   inject_data "${XRANDR_SCRIPT}"

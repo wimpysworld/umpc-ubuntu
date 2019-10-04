@@ -114,6 +114,7 @@ GRUB_LOOPBACK_CONF="${MNT_OUT}/boot/grub/loopback.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
 XRANDR_SCRIPT="${SQUASH_OUT}/usr/bin/umpc-display-scaler"
 XRANDR_DESKTOP="${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
+GSCHEMA_OVERRIDE="${SQUASH_OUT}/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
 
 # Copy the contents of the ISO
 mkdir -p ${MNT_IN}
@@ -161,6 +162,9 @@ inject_data "${TRACKPOINT_CONF}"
 
 # Rotate the touchscreen.
 inject_data "${TOUCH_RULES}"
+
+# Apply device specific gschema overrides
+inject_data "${GSCHEMA_OVERRIDE}"
 
 # Scale up the primary display to increase readability.
 inject_data "${XRANDR_SCRIPT}"
