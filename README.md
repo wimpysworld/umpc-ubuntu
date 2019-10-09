@@ -2,8 +2,8 @@
 
 Here are a couple of scripts for Ultra Mobile PCs (UMPC) such as the
 [GPD Pocket](https://gpd.hk/gpdpocket), [GPD Pocket 2](https://gpd.hk/gpdpocket2),
-[GPD MicroPC](https://gpd.hk/gpdmicropc), [GPD WIN 2](https://gpd.hk/gdpwin2) and
-[Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
+[GPD MicroPC](https://gpd.hk/gpdmicropc), [GPD WIN 2](https://gpd.hk/gdpwin2),
+[GPD P2 Max](https://www.gpd.hk/gpdp2max) and [Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
 for Ubuntu users.
 
   * `umpc-ubuntu.sh`: install the required hardware configuration on a running Ubuntu install.
@@ -25,7 +25,8 @@ The Ubuntu MATE team offers a bespoke images for the
 [GPD Pocket](https://gpd.hk/gpdpocket),
 [GPD Pocket 2](https://gpd.hk/gpdpocket2),
 [GPD WIN 2](https://gpd.hk/gdpwin2),
-[GPD MicroPC](https://gpd.hk/gpdmicropc) and
+[GPD MicroPC](https://gpd.hk/gpdmicropc),
+[GPD P2 Max](https://www.gpd.hk/gpdp2max) and
 [Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
 that include the hardware specific tweaks to get these devices working
 *"out of the box"* without any faffing about. Some models of the OneMix
@@ -41,7 +42,7 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * Supports `modesetting` *and* `xorg-video-intel` display drivers.
   * Enable **TearFree rendering by default**.
   * Enable touch screen rotation for Xorg and Wayland.
-  * Enable **scroll whell emulation** for Xorg.
+  * Enable **scroll wheel emulation** for Xorg.
     * While holding down the **right track point button** on the Pocket, Pocket 2 & Topjoy Falcon.
     * While holding down the **centre track point button** on the MicroPC.
   * Enable double size console (tty) font resolution.
@@ -49,8 +50,8 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * Results in an effective resolution of 1280x800 to make the small display panels easily readable.
     * Simple to disable if you want to restore full resolution.
   * **GRUB is usable post-install**.
-    * GPD Pocket, WIN 2, MicroPC & TopJoy Falcon GRUB is rotated 90 degress, but functional.
-    * GPD Pocket 2 GRUB is correctly rotated and functional.
+    * GPD Pocket, WIN 2, MicroPC & TopJoy Falcon GRUB is rotated 90 degrees, but functional.
+    * GPD Pocket 2 and GPD P2 Max GRUB is correctly rotated and functional.
   * GPD Pocket BRMC4356 WiFi firmware enabled by default.
   * GPD Pocket fan control kernel module enable by default.
 
@@ -69,10 +70,11 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * The workaround is to wait and the system will boot after a few seconds or press <kbd>Enter</kbd> to boot immeditately.
     * However, **GRUB is fully functional and usable post-install**.
 
-### GPD Pocket, Pocket 2 & MicroPC, Topjoy Falcon
+### GPD Pocket, Pocket 2, WIN 2 & MicroPC, Topjoy Falcon
 
-  * The Plymouth splash screen is not rotated.
+  * The Plymouth splash screen is not rotated on Ubuntu MATE 18.04
     * The workaround is to not care.
+    * Since Ubuntu MATE 19.10 (Linux 5.3) Plymouth is the correct orientation except on the GPD WIN 2 and TopJoy Falcon.
 
 ## The Scripts
 
@@ -118,13 +120,19 @@ required by the selected UMPC device.
 
 ## Accessing UMPC boot menus
 
-### GPD Pocket, GPD MicroPC, OneMix Yoga 2
+### GPD Pocket, GPD MicroPC, GPD P2 Max, OneMix Yoga 2
 
-Switch the devcice on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7</kbd> key until the Boot Manager screen appears.
+Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7</kbd> key until the Boot Manager screen appears.
 
 ### GPD Pocket 2 & Topjoy Falcon
 
 Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F12</kbd> key until the Boot Manager screen appears.
+
+### GPD WIN 2 
+
+Switch the device on, when the GPD logo is displayed press <kbd>Del</kbd> to
+enter the BIOS, navigate to *Save & Exit* and choose the storage device you
+want to boot from under *Boot Override*
 
 ## Accessing UMPC BIOS menus
 
@@ -147,6 +155,7 @@ xinput
 | GPD Pocket 2     | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
 | GPD WIN 2        | eDP-1 / eDP1 | 720x1280   | Right    | HK-ZYYK-US-A1-02-00 USB Keyboard Mouse    | Goodix Capacitive TouchScreen | >= 4.18    | >= 19.04   | gpd-pocket2   |
 | GPD MicroPC      | DSI-1 / DSI1 | 720x1280   | Right    | AMR-4630-XXX-0- 0-1023 USB KEYBOARD Mouse | n/a                           | >= 5.2     | >= 19.10   | gpd-micropc   |
+| GPD P2 Max       | eDP-1 / eDP1 | 2560x1600  | n/a      | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | ?          | >          | gpd-p2-max    |
 | OneMix Yoga      | ?            | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | ?             |
 | OneMix Yoga 1s   | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
 | OneMix Yoga 2    | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
