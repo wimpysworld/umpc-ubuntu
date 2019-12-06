@@ -82,7 +82,7 @@ function enable_umpc_config() {
 
 function disable_umpc_config() {
   # Remove the UMPC Pocket hardware configuration
-  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${BRCM4356_CONF} ${XRANDR_SCRIPT} ${XRANDR_DESKTOP}; do
+  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${TRACKPOINT_CONF} ${BRCM4356_CONF} ${XRANDR_SCRIPT} ${XRANDR_DESKTOP}; do
     if [ -f "${CONFIG}" ]; then
       rm -fv "${CONFIG}"
     fi
