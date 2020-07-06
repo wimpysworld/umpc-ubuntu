@@ -91,7 +91,7 @@ function disable_umpc_config() {
   # Remove the framebuffer rotation
   sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/GRUB_CMDLINE_LINUX_DEFAULT="quiet/' "${GRUB_DEFAULT_CONF}"
   sed -i 's/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/GRUB_CMDLINE_LINUX=""/' "${GRUB_DEFAULT_CONF}"
-  sed -i 's/GRUB_GFXMODE=1200x1920x32/d' "${GRUB_DEFAULT_CONF}"
+  sed -i '/GRUB_GFXMODE=1200x1920x32/d' "${GRUB_DEFAULT_CONF}"
   update-grub
 
   # Restore tty font size
