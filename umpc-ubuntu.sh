@@ -10,8 +10,6 @@ TOUCH_RULES="/etc/udev/rules.d/99-${UMPC}-touch.rules"
 BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="/etc/default/grub"
 CONSOLE_CONF="/etc/default/console-setup"
-XRANDR_SCRIPT="/usr/bin/umpc-display-scaler"
-XRANDR_DESKTOP="/etc/xdg/autostart/umpc-display-scaler.desktop"
 GSCHEMA_OVERRIDE="/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
 
 # Copy file from /data to it's intended location
@@ -54,10 +52,6 @@ function enable_umpc_config() {
   # Apply device specific gschema overrides
   inject_data "${GSCHEMA_OVERRIDE}"
 
-  # Scale up the primary display to increase readability.
-  inject_data "${XRANDR_SCRIPT}"
-  inject_data "${XRANDR_DESKTOP}"
-
   # Add BRCM4356 firmware configuration
   if [ "${UMPC}" == "gpd-pocket" ]; then
     inject_data "${BRCM4356_CONF}"
@@ -82,7 +76,7 @@ function enable_umpc_config() {
 
 function disable_umpc_config() {
   # Remove the UMPC Pocket hardware configuration
-  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${TRACKPOINT_CONF} ${BRCM4356_CONF} ${XRANDR_SCRIPT} ${XRANDR_DESKTOP}; do
+  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${TRACKPOINT_CONF} ${BRCM4356_CONF}; do
     if [ -f "${CONFIG}" ]; then
       rm -fv "${CONFIG}"
     fi
