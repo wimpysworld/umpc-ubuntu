@@ -46,9 +46,6 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * While holding down the **right track point button** on the Pocket, Pocket 2 & Topjoy Falcon.
     * While holding down the **centre track point button** on the MicroPC.
   * Enable double size console (tty) font resolution.
-  * Enable **resolution scaling** for 1920x1200 displays. *(MATE Desktop only)*
-    * Results in an effective resolution of 1280x800 to make the small display panels easily readable.
-    * Simple to disable if you want to restore full resolution.
   * **GRUB is usable post-install**.
     * GPD Pocket, WIN 2, MicroPC & TopJoy Falcon GRUB is rotated 90 degrees, but functional.
     * GPD Pocket 2 and GPD P2 Max GRUB is correctly rotated and functional.
@@ -128,7 +125,7 @@ Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7
 
 Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F12</kbd> key until the Boot Manager screen appears.
 
-### GPD WIN 2 
+### GPD WIN 2
 
 Switch the device on, when the GPD logo is displayed press <kbd>Del</kbd> to
 enter the BIOS, navigate to *Save & Exit* and choose the storage device you
