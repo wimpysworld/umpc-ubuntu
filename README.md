@@ -10,11 +10,11 @@ for Ubuntu users.
   * `umpc-ubuntu-respin.sh`: modify an existing Ubuntu .iso image with UMPC specific hardware configuration.
 
 Ultra Mobile PCs (UMPC) have had something of a resurgence in recent years
-thanks to very successfull crowd funding campaigns for netbook style laptops 
-featuring a high resolution touch displays housed in an aluminium alloy 
+thanks to very successfull crowd funding campaigns for netbook style laptops
+featuring a high resolution touch displays housed in an aluminium alloy
 body. These scripts for UMPC devices are based on the excellent work by
-[Hans de Goede](https://hansdegoede.livejournal.com/), [nexus511](https://apt.nexus511.net/), 
-[stockmind](https://github.com/stockmind/gpd-pocket-ubuntu-respin) and many 
+[Hans de Goede](https://hansdegoede.livejournal.com/), [nexus511](https://apt.nexus511.net/),
+[stockmind](https://github.com/stockmind/gpd-pocket-ubuntu-respin) and many
 others.
 
 ![GPD Pockets](gpd-pockets.jpg "The GPD Pocket & GPD Pocket 2 running Ubuntu MATE 18.10")
@@ -56,7 +56,7 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
 
 ### GPD Pocket, WIN 2, MicroPC and Topjoy Falcon
 
-  * The GRUB2 menu is rotated 90 degress on the GPD Pocket, MicroPC and Topjoy Falcon.
+  * The GRUB2 menu is rotated 90 degrees on the GPD Pocket, MicroPC and Topjoy Falcon.
     * The workaround is to tilt your head.
   * The built in speaker in the GPD Pocket is mono and doesn't play audio from the right channel.
     * The workaround is to use headphones connected the 3.5mm audio jack.
@@ -64,24 +64,22 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
 ### GPD Pocket 2
 
   * The boot menu is not displayed in the GPD Pocket 2 live media.
-    * The workaround is to wait and the system will boot after a few seconds or press <kbd>Enter</kbd> to boot immeditately.
+    * The workaround is to wait and the system will boot after a few seconds or press <kbd>Enter</kbd> to boot immediately.
     * However, **GRUB is fully functional and usable post-install**.
 
-### GPD Pocket, Pocket 2, WIN 2 & MicroPC, Topjoy Falcon
+### GPD WIN 2 & Topjoy Falcon
 
-  * The Plymouth splash screen is not rotated on Ubuntu MATE 18.04
+  * The Plymouth splash screen is not correctly orientated
     * The workaround is to not care.
-    * Since Ubuntu MATE 19.10 (Linux 5.3) Plymouth is the correct orientation except on the GPD WIN 2 and TopJoy Falcon.
 
 ## The Scripts
 
-These scripts have been tested on [Ubuntu MATE](https://ubuntu-mate.org) 18.04.2,
-18.10, 19.04 and 19.10. All Ubuntu flavours should work although if you use Wayland
-your mileage may vary. **The GPD MicroPC currently requires Ubuntu 19.10.**
+These scripts have been tested on [Ubuntu MATE](https://ubuntu-mate.org) 20.04.1.
+All Ubuntu flavours should work although if you use Wayland your mileage may vary.
 
 ### umpc-ubuntu.sh
 
-Install one of the Ubuntu 18.04.2 (or newer) flavours on a supported UMPC
+Install one of the Ubuntu 20.04 (or newer) flavours on a supported UMPC
 device and run the following to inject the required hardware configuration.
 
 ```
@@ -106,10 +104,11 @@ cd umpc-ubuntu
   * Download an .iso image for one of the Ubuntu 18.04.2 (or newer) flavours.
 
 ```
-sudo ./umpc-ubuntu-respin.sh -d gpd-pocket ubuntu-mate-18.04.2-desktop-amd64.iso
-sudo ./umpc-ubuntu-respin.sh -d gpd-pocket2 ubuntu-mate-18.04.2-desktop-amd64.iso
-sudo ./umpc-ubuntu-respin.sh -d topjoy-falcon ubuntu-mate-18.04.2-desktop-amd64.iso
-sudo ./umpc-ubuntu-respin.sh -d gpd-micropc ubuntu-mate-19.10-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-pocket ubuntu-mate-20.04.1-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-pocket2 ubuntu-mate-20.04.1-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-micropc ubuntu-mate-20.04.1-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-p2-max ubuntu-mate-20.04.1-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d topjoy-falcon ubuntu-mate-20.04.1-desktop-amd64.iso
 ```
 
 A new .iso will be created that includes the additional hardware tweaks
@@ -125,13 +124,13 @@ Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7
 
 Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F12</kbd> key until the Boot Manager screen appears.
 
+## Accessing UMPC BIOS menus
+
 ### GPD WIN 2
 
 Switch the device on, when the GPD logo is displayed press <kbd>Del</kbd> to
 enter the BIOS, navigate to *Save & Exit* and choose the storage device you
 want to boot from under *Boot Override*
-
-## Accessing UMPC BIOS menus
 
 ### Topjoy Falcon
 
