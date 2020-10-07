@@ -175,8 +175,8 @@ sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/
 if [ "${UMPC}" == "gpd-pocket2" ]; then
   grep -qxF 'GRUB_GFXMODE=1200x1920x32' "${GRUB_DEFAULT_CONF}" || echo 'GRUB_GFXMODE=1200x1920x32' >> "${GRUB_DEFAULT_CONF}"
 fi
-sed -i 's/quiet splash/video=efifb fbcon=rotate:1 quiet splash/g' "${GRUB_BOOT_CONF}"
-sed -i 's/quiet splash/video=efifb fbcon=rotate:1 quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+sed -i 's/quiet splash/video=efifb fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
+sed -i 's/quiet splash/video=efifb fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
 
 echo
 echo "Modified : ${GRUB_DEFAULT_CONF}"
