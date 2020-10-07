@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Set to either "gpd-pocket", "gpd-pocket2", "gpd-micropc", "gpd-p2-max" or "topjoy-falcon"
+# Set to either "gpd-pocket", "gpd-pocket2", "gpd-micropc", "gpd-p2-max", "gpd-win-max" or "topjoy-falcon"
 UMPC="gpd-pocket2"
 XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
@@ -11,6 +11,7 @@ BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="/etc/default/grub"
 CONSOLE_CONF="/etc/default/console-setup"
 GSCHEMA_OVERRIDE="/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
+EDID="${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
 
 # Copy file from /data to it's intended location
 function inject_data() {
@@ -52,6 +53,9 @@ function enable_umpc_config() {
   # Apply device specific gschema overrides
   inject_data "${GSCHEMA_OVERRIDE}"
 
+  # Add device specific EDID
+  inject_data "${EDID}"
+
   # Add BRCM4356 firmware configuration
   if [ "${UMPC}" == "gpd-pocket" ]; then
     inject_data "${BRCM4356_CONF}"
@@ -61,8 +65,14 @@ function enable_umpc_config() {
   fi
 
   # Rotate the framebuffer
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
-  sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/' "${GRUB_DEFAULT_CONF}"
+  if  [ "${UMPC}" == "gpd-win-max" ]; then
+    sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb fbcon=rotate:1 drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin quiet/" "${GRUB_DEFAULT_CONF}"
+    sed -i "s/GRUB_CMDLINE_LINUX=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb fbcon=rotate:1 drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin quiet/" "${GRUB_DEFAULT_CONF}"
+  else
+    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
+    sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/' "${GRUB_DEFAULT_CONF}"
+  fi
+
   if [ "${UMPC}" == "gpd-pocket2" ]; then
     grep -qxF 'GRUB_GFXMODE=1200x1920x32' "${GRUB_DEFAULT_CONF}" || echo 'GRUB_GFXMODE=1200x1920x32' >> "${GRUB_DEFAULT_CONF}"
   fi
@@ -76,7 +86,7 @@ function enable_umpc_config() {
 
 function disable_umpc_config() {
   # Remove the UMPC Pocket hardware configuration
-  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${TRACKPOINT_CONF} ${BRCM4356_CONF}; do
+  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${TRACKPOINT_CONF} ${GSCHEMA_OVERRIDE} ${EDID} ${BRCM4356_CONF}; do
     if [ -f "${CONFIG}" ]; then
       rm -fv "${CONFIG}"
     fi

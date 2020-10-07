@@ -10,7 +10,7 @@ function usage() {
     echo
     echo "OPTIONS"
     echo "    -d"
-    echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket2', 'gpd-micropc', 'gpd-p2-max' or 'topjoy-falcon'"
+    echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket2', 'gpd-micropc', 'gpd-p2-max', 'gpd-win-max' or 'topjoy-falcon'"
     echo
     echo "    -h"
     echo "        display this help and exit"
@@ -78,7 +78,7 @@ ISO_IN="${@}"
 if [ -z "${UMPC}" ]; then
     echo "ERROR! You must supply the name of the device you want to apply modifications for."
     usage
-elif [ "${UMPC}" != "gpd-pocket" ] && [ "${UMPC}" != "gpd-pocket2" ] && [ "${UMPC}" != "gpd-micropc" ] && [ "${UMPC}" != "gpd-p2-max" ]  && [ "${UMPC}" != "topjoy-falcon" ]; then
+elif [ "${UMPC}" != "gpd-pocket" ] && [ "${UMPC}" != "gpd-pocket2" ] && [ "${UMPC}" != "gpd-micropc" ] && [ "${UMPC}" != "gpd-p2-max" ] && [ "${UMPC}" != "gpd-win-max" ] && [ "${UMPC}" != "topjoy-falcon" ]; then
     echo "ERROR! Unknown device name given."
     usage
 fi
@@ -113,6 +113,7 @@ GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
 GRUB_LOOPBACK_CONF="${MNT_OUT}/boot/grub/loopback.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
 GSCHEMA_OVERRIDE="${SQUASH_OUT}/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
+EDID="${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
 
 # Copy the contents of the ISO
 mkdir -p ${MNT_IN}
@@ -164,19 +165,29 @@ inject_data "${TOUCH_RULES}"
 # Apply device specific gschema overrides
 inject_data "${GSCHEMA_OVERRIDE}"
 
+# Add device specific EDID
+inject_data "${EDID}"
+
 # Add BRCM4356 firmware configuration
 if [ "${UMPC}" == "gpd-pocket" ]; then
   inject_data "${BRCM4356_CONF}"
 fi
 
 # Rotate the framebuffer
-sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
-sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/' "${GRUB_DEFAULT_CONF}"
+if  [ "${UMPC}" == "gpd-win-max" ]; then
+  sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin fbcon=rotate:1 quiet/" "${GRUB_DEFAULT_CONF}"
+  sed -i "s/GRUB_CMDLINE_LINUX=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin fbcon=rotate:1 quiet/" "${GRUB_DEFAULT_CONF}"
+  sed -i "s/quiet splash/video=efifb drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
+  sed -i "s/quiet splash/video=efifb drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
+else
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_CMDLINE_LINUX="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/quiet splash/video=efifb fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
+  sed -i 's/quiet splash/video=efifb fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+fi
 if [ "${UMPC}" == "gpd-pocket2" ]; then
   grep -qxF 'GRUB_GFXMODE=1200x1920x32' "${GRUB_DEFAULT_CONF}" || echo 'GRUB_GFXMODE=1200x1920x32' >> "${GRUB_DEFAULT_CONF}"
 fi
-sed -i 's/quiet splash/video=efifb fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
-sed -i 's/quiet splash/video=efifb fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
 
 echo
 echo "Modified : ${GRUB_DEFAULT_CONF}"
