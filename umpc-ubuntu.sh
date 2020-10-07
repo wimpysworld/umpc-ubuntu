@@ -27,7 +27,7 @@ function inject_data() {
   if [ ! -d "${TARGET_DIR}" ]; then
     mkdir -p "${TARGET_DIR}"
   fi
-  
+
   if [ -f "${SOURCE_FILE}" ]; then
     cp "${SOURCE_FILE}" "${TARGET_FILE}"
   fi
