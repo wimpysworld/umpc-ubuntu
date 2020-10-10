@@ -11,7 +11,7 @@ BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="/etc/default/grub"
 CONSOLE_CONF="/etc/default/console-setup"
 GSCHEMA_OVERRIDE="/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
-EDID="${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
+EDID="/lib/firmware/edid/${UMPC}-edid.bin"
 
 # Copy file from /data to it's intended location
 function inject_data() {
@@ -66,8 +66,8 @@ function enable_umpc_config() {
 
   # Rotate the framebuffer
   if  [ "${UMPC}" == "gpd-win-max" ]; then
-    sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb fbcon=rotate:1 drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin quiet/" "${GRUB_DEFAULT_CONF}"
-    sed -i "s/GRUB_CMDLINE_LINUX=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb fbcon=rotate:1 drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin quiet/" "${GRUB_DEFAULT_CONF}"
+    sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb fbcon=rotate:1 drm_kms_helper.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin quiet/" "${GRUB_DEFAULT_CONF}"
+    sed -i "s/GRUB_CMDLINE_LINUX=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb fbcon=rotate:1 drm_kms_helper.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin quiet/" "${GRUB_DEFAULT_CONF}"
   else
     sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
     sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/' "${GRUB_DEFAULT_CONF}"
