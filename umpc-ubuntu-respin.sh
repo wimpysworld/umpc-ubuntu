@@ -245,5 +245,12 @@ xorriso \
   -volid "${VOL_ID}" \
   -o "${ISO_OUT}" "${MNT_OUT}/"
 
+# TODO: Does xorriso need updating for 20.10 onward?
+#https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148
+#From https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148/comments/195
+#xorriso -as mkisofs -r -checksum_algorithm_iso md5,sha1 -V Ubuntu\ 20.10\ amd64 -o /srv/cdimage.ubuntu.com/scratch/ubuntu/groovy/daily-live/debian-cd/amd64/groovy-desktop-amd64.raw -J -joliet-long -l -b boot/grub/i386-pc/eltorito.img -no-emul-boot -boot-load-size 4 -boot-info-table --grub2-boot-info --grub2-mbr cd-boot-images/usr/share/cd-boot-images-amd64/images/boot/grub/i386-pc/boot_hybrid.img -append_partition 2 0xef cd-boot-images/usr/share/cd-boot-images-amd64/images/boot/grub/efi.img -appended_part_as_gpt -eltorito-alt-boot -e --interval\:appended_partition_2\:all\:\: -no-emul-boot -partition_offset 16 cd-boot-images/usr/share/cd-boot-images-amd64/tree CD1
+
+
+
 chown -v "${SUDO_USER}":"${SUDO_USER}" "${ISO_OUT}"
 clean_up
