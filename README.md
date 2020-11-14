@@ -3,14 +3,15 @@
 Here are a couple of scripts for Ultra Mobile PCs (UMPC) such as the
 [GPD Pocket](https://gpd.hk/gpdpocket), [GPD Pocket 2](https://gpd.hk/gpdpocket2),
 [GPD MicroPC](https://gpd.hk/gpdmicropc), [GPD WIN 2](https://gpd.hk/gdpwin2),
-[GPD P2 Max](https://www.gpd.hk/gpdp2max) and [Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
+[GPD P2 Max](https://www.gpd.hk/gpdp2max), [GPD WIN Max](https://gpd.hk/gpdwinmax)
+and [Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
 for Ubuntu users.
 
   * `umpc-ubuntu.sh`: install the required hardware configuration on a running Ubuntu install.
   * `umpc-ubuntu-respin.sh`: modify an existing Ubuntu .iso image with UMPC specific hardware configuration.
 
 Ultra Mobile PCs (UMPC) have had something of a resurgence in recent years
-thanks to very successfull crowd funding campaigns for netbook style laptops
+thanks to very successful crowd funding campaigns for netbook style laptops
 featuring a high resolution touch displays housed in an aluminium alloy
 body. These scripts for UMPC devices are based on the excellent work by
 [Hans de Goede](https://hansdegoede.livejournal.com/), [nexus511](https://apt.nexus511.net/),
@@ -26,7 +27,8 @@ The Ubuntu MATE team offers a bespoke images for the
 [GPD Pocket 2](https://gpd.hk/gpdpocket2),
 [GPD WIN 2](https://gpd.hk/gdpwin2),
 [GPD MicroPC](https://gpd.hk/gpdmicropc),
-[GPD P2 Max](https://www.gpd.hk/gpdp2max) and
+[GPD P2 Max](https://www.gpd.hk/gpdp2max),
+[GPD WIN Max](https://gpd.hk/gpdwinmax) and
 [Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
 that include the hardware specific tweaks to get these devices working
 *"out of the box"* without any faffing about. Some models of the OneMix
@@ -54,7 +56,7 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
 
 ## Known Issues
 
-### GPD Pocket, WIN 2, MicroPC and Topjoy Falcon
+### GPD Pocket, WIN 2, MicroPC, WIN Max and Topjoy Falcon
 
   * The GRUB2 menu is rotated 90 degrees on the GPD Pocket, MicroPC and Topjoy Falcon.
     * The workaround is to tilt your head.
@@ -67,9 +69,9 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * The workaround is to wait and the system will boot after a few seconds or press <kbd>Enter</kbd> to boot immediately.
     * However, **GRUB is fully functional and usable post-install**.
 
-### GPD WIN 2 & Topjoy Falcon
+### GPD WIN 2, GPD WIN Max & Topjoy Falcon
 
-  * The Plymouth splash screen is not correctly orientated
+  * The Plymouth splash screen is not correctly orientated; and for the GPD WIN Max incorrectly coloured.
     * The workaround is to not care.
 
 ## The Scripts
@@ -101,13 +103,14 @@ git clone https://github.com/wimpysworld/umpc-ubuntu.git
 cd umpc-ubuntu
 ```
 
-  * Download an .iso image for one of the Ubuntu 18.04.2 (or newer) flavours.
+  * Download an .iso image for one of the Ubuntu 20.04 (or newer) flavours.
 
 ```
 sudo ./umpc-ubuntu-respin.sh -d gpd-pocket ubuntu-mate-20.04.1-desktop-amd64.iso
 sudo ./umpc-ubuntu-respin.sh -d gpd-pocket2 ubuntu-mate-20.04.1-desktop-amd64.iso
 sudo ./umpc-ubuntu-respin.sh -d gpd-micropc ubuntu-mate-20.04.1-desktop-amd64.iso
 sudo ./umpc-ubuntu-respin.sh -d gpd-p2-max ubuntu-mate-20.04.1-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-win-max ubuntu-mate-20.04.1-desktop-amd64.iso
 sudo ./umpc-ubuntu-respin.sh -d topjoy-falcon ubuntu-mate-20.04.1-desktop-amd64.iso
 ```
 
@@ -119,6 +122,10 @@ required by the selected UMPC device.
 ### GPD Pocket, GPD MicroPC, GPD P2 Max, OneMix Yoga 2
 
 Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7</kbd> key until the Boot Manager screen appears.
+
+### GPD Win Max
+
+Switch the device on, immediately hold the <kbd>F7</kbd> key until the Boot Manager screen appears.
 
 ### GPD Pocket 2 & Topjoy Falcon
 
@@ -152,6 +159,7 @@ xinput
 | GPD WIN 2        | eDP-1 / eDP1 | 720x1280   | Right    | HK-ZYYK-US-A1-02-00 USB Keyboard Mouse    | Goodix Capacitive TouchScreen | >= 4.18    | >= 19.04   | gpd-pocket2   |
 | GPD MicroPC      | DSI-1 / DSI1 | 720x1280   | Right    | AMR-4630-XXX-0- 0-1023 USB KEYBOARD Mouse | n/a                           | >= 5.2     | >= 19.10   | gpd-micropc   |
 | GPD P2 Max       | eDP-1 / eDP1 | 2560x1600  | n/a      | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | ?          | >          | gpd-p2-max    |
+| GPD WIN Max      | eDP-1 / eDP1 | 800x1280   | Right    | HTIX5288:00 093A:0255 Mouse               | Goodix Capacitive TouchScreen | >= 5.4     | >= 20.04.1 | gpd-win-max   |
 | OneMix Yoga      | ?            | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | ?             |
 | OneMix Yoga 1s   | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
 | OneMix Yoga 2    | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
