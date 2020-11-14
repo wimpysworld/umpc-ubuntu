@@ -68,18 +68,6 @@ inject_data "${GRUB_D_CONF}"
     modprobe brcmfmac
   fi
 
-  # Rotate the framebuffer
-  if  [ "${UMPC}" == "gpd-win-max" ]; then
-    sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb fbcon=rotate:1 drm_kms_helper.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin quiet/" "${GRUB_DEFAULT_CONF}"
-    sed -i "s/GRUB_CMDLINE_LINUX=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb fbcon=rotate:1 drm_kms_helper.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin quiet/" "${GRUB_DEFAULT_CONF}"
-  else
-    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
-    sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/' "${GRUB_DEFAULT_CONF}"
-  fi
-
-  if [ "${UMPC}" == "gpd-pocket2" ]; then
-    grep -qxF 'GRUB_GFXMODE=1200x1920x32' "${GRUB_DEFAULT_CONF}" || echo 'GRUB_GFXMODE=1200x1920x32' >> "${GRUB_DEFAULT_CONF}"
-  fi
   update-grub
 
   # Increase tty font size
