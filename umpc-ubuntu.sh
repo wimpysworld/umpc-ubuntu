@@ -9,6 +9,7 @@ TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
 TOUCH_RULES="/etc/udev/rules.d/99-${UMPC}-touch.rules"
 BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="/etc/default/grub"
+GRUB_D_CONF="/etc/default/grub.d/${UMPC}.cfg"
 CONSOLE_CONF="/etc/default/console-setup"
 GSCHEMA_OVERRIDE="/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
 EDID="/lib/firmware/edid/${UMPC}-edid.bin"
@@ -55,6 +56,9 @@ function enable_umpc_config() {
 
   # Add device specific EDID
   inject_data "${EDID}"
+
+# Add device specific /etc/grub.d configuration
+inject_data "${GRUB_D_CONF}"
 
   # Add BRCM4356 firmware configuration
   if [ "${UMPC}" == "gpd-pocket" ]; then

@@ -109,6 +109,7 @@ TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
 TOUCH_RULES="${SQUASH_OUT}/etc/udev/rules.d/99-${UMPC}-touch.rules"
 BRCM4356_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="${SQUASH_OUT}/etc/default/grub"
+GRUB_D_CONF="${SQUASH_OUT}/etc/default/grub.d/${UMPC}.cfg"
 GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
 GRUB_LOOPBACK_CONF="${MNT_OUT}/boot/grub/loopback.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
@@ -168,6 +169,9 @@ inject_data "${GSCHEMA_OVERRIDE}"
 # Add device specific EDID
 inject_data "${EDID}"
 
+# Add device specific /etc/grub.d configuration
+inject_data "${GRUB_D_CONF}"
+
 # Add BRCM4356 firmware configuration
 if [ "${UMPC}" == "gpd-pocket" ]; then
   inject_data "${BRCM4356_CONF}"
@@ -175,13 +179,11 @@ fi
 
 # Rotate the framebuffer
 if  [ "${UMPC}" == "gpd-win-max" ]; then
-  sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin fbcon=rotate:1 quiet/" "${GRUB_DEFAULT_CONF}"
-  sed -i "s/GRUB_CMDLINE_LINUX=\"quiet/GRUB_CMDLINE_LINUX_DEFAULT=\"video=efifb drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin fbcon=rotate:1 quiet/" "${GRUB_DEFAULT_CONF}"
-  sed -i "s/quiet splash/video=efifb drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
-  sed -i "s/quiet splash/video=efifb drm_kms_helper.edid_firmware=eDP-1:edid/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
+  sed -i "s/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1/" "${GRUB_DEFAULT_CONF}"
+  sed -i "s/quiet splash/video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
+  sed -i "s/quiet splash/video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
 else
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
-  sed -i 's/GRUB_CMDLINE_LINUX="quiet/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
   sed -i 's/quiet splash/video=efifb fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
   sed -i 's/quiet splash/video=efifb fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
 fi
