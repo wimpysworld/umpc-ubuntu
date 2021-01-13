@@ -140,9 +140,9 @@ if [ -f "${MNT_IN}/README.diskdefines" ] && [ -f "${MNT_IN}/casper/filesystem.sq
     "${MNT_IN}/" "${MNT_OUT}/"
 
   # Extract the contents of the squashfs
-  cd "${MNT_OUT}/casper"
+  cd "${MNT_OUT}/casper" || return
   unsquashfs "${SQUASH_IN}"
-  cd -
+  cd - || return
   umount -l "${MNT_IN}"
 else
   echo "ERROR! This doesn't look like an Ubuntu iso image."
@@ -221,9 +221,9 @@ rm -rf "${SQUASH_OUT}"
 sync
 
 # Collect md5sums
-cd "${MNT_OUT}"
+cd "${MNT_OUT}" || exit
 find . -type f -print0 | xargs -0 md5sum >> "${MNT_OUT}/md5sum.txt"
-cd -
+cd - || exit
 
 VOL_ID=$(echo ${FLAVOUR} ${VERSION} ${UMPC} | cut -c1-31)
 rm -f "${ISO_OUT}" 2>/dev/null
