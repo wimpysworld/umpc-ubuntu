@@ -53,11 +53,6 @@ if [ $(id -u) -ne 0 ]; then
   exit 1
 fi
 
-if [ ! -f /usr/lib/ISOLINUX/isohdpfx.bin ]; then
-  echo "ERROR! Unable to find /usr/lib/ISOLINUX/isohdpfx.bin. Installing now..."
-  apt -y install isolinux
-fi
-
 if [ ! -f /usr/bin/xorriso ]; then
   echo "ERROR! Unable to find /usr/bin/xorriso. Installing now..."
   apt-get -y install xorriso
