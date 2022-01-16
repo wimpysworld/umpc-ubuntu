@@ -117,8 +117,8 @@ GSCHEMA_OVERRIDE="${SQUASH_OUT}/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.ov
 EDID="${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
 
 # Copy the contents of the ISO
-mkdir -p ${MNT_IN}
-mkdir -p ${MNT_OUT}
+mkdir -p "${MNT_IN}"
+mkdir -p "${MNT_OUT}"
 mount -o loop "${ISO_IN}" "${MNT_IN}"
 if [ $? -ne 0 ]; then
   echo "ERROR! Unable to mount ${ISO_IN}"
