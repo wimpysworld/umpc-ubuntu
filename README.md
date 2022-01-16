@@ -2,9 +2,9 @@
 
 Here are a couple of scripts for Ultra Mobile PCs (UMPC) such as the
 [GPD Pocket](https://gpd.hk/gpdpocket), [GPD Pocket 2](https://gpd.hk/gpdpocket2),
-[GPD MicroPC](https://gpd.hk/gpdmicropc), [GPD WIN 2](https://gpd.hk/gdpwin2),
-[GPD P2 Max](https://www.gpd.hk/gpdp2max), [GPD WIN Max](https://gpd.hk/gpdwinmax)
-and [Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
+[GPD Pocket 3](https://gpd.hk/gpdpocket3), [GPD MicroPC](https://gpd.hk/gpdmicropc),
+[GPD WIN 2](https://gpd.hk/gdpwin2), [GPD P2 Max](https://www.gpd.hk/gpdp2max),
+[GPD WIN Max](https://gpd.hk/gpdwinmax) and [Topjoy Falcon](https://www.kickstarter.com/projects/440069565/falcon-worlds-first-8-inch-2-in-1-laptop)
 for Ubuntu users.
 
   * `umpc-ubuntu.sh`: install the required hardware configuration on a running Ubuntu install.
@@ -25,6 +25,7 @@ others.
 The Ubuntu MATE team offers a bespoke images for the
 [GPD Pocket](https://gpd.hk/gpdpocket),
 [GPD Pocket 2](https://gpd.hk/gpdpocket2),
+[GPD Pocket 3](https://gpd.hk/gpdpocket3),
 [GPD WIN 2](https://gpd.hk/gdpwin2),
 [GPD MicroPC](https://gpd.hk/gpdmicropc),
 [GPD P2 Max](https://www.gpd.hk/gpdp2max),
@@ -53,6 +54,7 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * GPD Pocket 2 and GPD P2 Max GRUB is correctly rotated and functional.
   * GPD Pocket BRMC4356 WiFi firmware enabled by default.
   * GPD Pocket fan control kernel module enable by default.
+  * GPD WIN Max features a custom, persistent, EDID.
 
 ## Known Issues
 
@@ -105,13 +107,14 @@ cd umpc-ubuntu
 
   * Download an .iso image for one of the Ubuntu 20.04 (or newer) flavours.
 
-```
-sudo ./umpc-ubuntu-respin.sh -d gpd-pocket ubuntu-mate-20.04.1-desktop-amd64.iso
-sudo ./umpc-ubuntu-respin.sh -d gpd-pocket2 ubuntu-mate-20.04.1-desktop-amd64.iso
-sudo ./umpc-ubuntu-respin.sh -d gpd-micropc ubuntu-mate-20.04.1-desktop-amd64.iso
-sudo ./umpc-ubuntu-respin.sh -d gpd-p2-max ubuntu-mate-20.04.1-desktop-amd64.iso
-sudo ./umpc-ubuntu-respin.sh -d gpd-win-max ubuntu-mate-20.04.1-desktop-amd64.iso
-sudo ./umpc-ubuntu-respin.sh -d topjoy-falcon ubuntu-mate-20.04.1-desktop-amd64.iso
+```bash
+sudo ./umpc-ubuntu-respin.sh -d gpd-pocket ubuntu-mate-20.04.3-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-pocket2 ubuntu-mate-20.04.3-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-pocket3 ubuntu-mate-21.10-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-micropc ubuntu-mate-20.04.3-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-p2-max ubuntu-mate-20.04.3-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-win-max ubuntu-mate-20.04.3-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d topjoy-falcon ubuntu-mate-20.04.3-desktop-amd64.iso
 ```
 
 A new .iso will be created that includes the additional hardware tweaks
@@ -119,7 +122,7 @@ required by the selected UMPC device.
 
 ## Accessing UMPC boot menus
 
-### GPD Pocket, GPD MicroPC, GPD P2 Max, OneMix Yoga 2
+### GPD Pocket, GPD MicroPC, GPD P2 Max, GPD Pocket 3, OneMix Yoga 2
 
 Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7</kbd> key until the Boot Manager screen appears.
 
@@ -156,6 +159,7 @@ xinput
 |   -------------  | ------------ | ---------- | -------- | ----------------------------------------- | ----------------------------- | ---------- | ---------- | ------------- |
 | GPD Pocket       | DSI-1 / DSI1 | 1200x1920  | Right    | SINO WEALTH Gaming Keyboard               | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket    |
 | GPD Pocket 2     | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
+| GPD Pocket 3     | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | GXTP7380 | >= 5.13    | >= 21.10 | gpd-pocket3   |
 | GPD WIN 2        | eDP-1 / eDP1 | 720x1280   | Right    | HK-ZYYK-US-A1-02-00 USB Keyboard Mouse    | Goodix Capacitive TouchScreen | >= 4.18    | >= 19.04   | gpd-pocket2   |
 | GPD MicroPC      | DSI-1 / DSI1 | 720x1280   | Right    | AMR-4630-XXX-0- 0-1023 USB KEYBOARD Mouse | n/a                           | >= 5.2     | >= 19.10   | gpd-micropc   |
 | GPD P2 Max       | eDP-1 / eDP1 | 2560x1600  | n/a      | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | ?          | >          | gpd-p2-max    |
