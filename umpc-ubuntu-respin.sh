@@ -126,12 +126,25 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-if [ -f "${MNT_IN}/README.diskdefines" ] && [ -f "${MNT_IN}/casper/filesystem.squashfs" ]; then
-  FLAVOUR=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f4)
-  VERSION=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d' ' -f5)
-  QUALITY=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d'-' -f3 | sed 's/amd64//'g | sed 's/ //g')
-  CODENAME=$(head -n1 ${MNT_IN}/README.diskdefines | cut -d'"' -f2)
-  echo "Modifying ${FLAVOUR} ${VERSION} ${QUALITY} (${CODENAME}) for the ${UMPC}"
+if [ -d "${MNT_IN}/isolinux" ]; then
+  ISO_BUILD="old"
+  if [ ! -f /usr/lib/ISOLINUX/isohdpfx.bin ]; then
+    echo "ERROR! Unable to find /usr/lib/ISOLINUX/isohdpfx.bin. Installing now..."
+    apt-get -y install isolinux
+  fi
+else
+  ISO_BUILD="new"
+  if [ ! -f /usr/share/cd-boot-images-amd64/images/boot/grub/efi.img ]; then
+    echo "ERROR! Unable to find /usr/share/cd-boot-images-amd64/images/boot/grub/efi.img. Installing now..."
+    apt-get -y install cd-boot-images-amd64
+  fi
+fi
+
+if [ -f "${MNT_IN}/dists/stable/Release" ] && [ -f "${MNT_IN}/casper/filesystem.squashfs" ]; then
+  FLAVOUR=$(echo "${ISO_IN}" | cut -d'2' -f1 | sed 's/\(.*\)-/\1/')
+  VERSION=$(grep Version: "${MNT_IN}/dists/stable/Release" | cut -d':' -f2 | sed 's/ //g')
+  CODENAME=$(grep Codename: "${MNT_IN}/dists/stable/Release" | cut -d':' -f2 | sed 's/ //g')
+  echo "Modifying ${FLAVOUR} ${VERSION} (${CODENAME}) for the ${UMPC}"
 
   rsync -aHAXx --delete \
     --exclude=/casper/filesystem.squashfs \
@@ -225,9 +238,11 @@ cd "${MNT_OUT}"
 find . -type f -print0 | xargs -0 md5sum >> "${MNT_OUT}/md5sum.txt"
 cd -
 
-VOL_ID=$(echo ${FLAVOUR} ${VERSION} ${UMPC} | cut -c1-31)
+VOL_ID=$(echo "${FLAVOUR^^}-${VERSION}-${UMPC^^}" | cut -c1-31)
 rm -f "${ISO_OUT}" 2>/dev/null
-xorriso \
+case ${ISO_BUILD} in
+  old)
+  xorriso \
   -as mkisofs \
   -r \
   -checksum_algorithm_iso md5,sha1 \
@@ -245,14 +260,26 @@ xorriso \
   -isohybrid-gpt-basdat \
   -isohybrid-apm-hfsplus \
   -volid "${VOL_ID}" \
-  -o "${ISO_OUT}" "${MNT_OUT}/"
-
-# TODO: Does xorriso need updating for 20.10 onward?
-#https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148
-#From https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148/comments/195
-#xorriso -as mkisofs -r -checksum_algorithm_iso md5,sha1 -V Ubuntu\ 20.10\ amd64 -o /srv/cdimage.ubuntu.com/scratch/ubuntu/groovy/daily-live/debian-cd/amd64/groovy-desktop-amd64.raw -J -joliet-long -l -b boot/grub/i386-pc/eltorito.img -no-emul-boot -boot-load-size 4 -boot-info-table --grub2-boot-info --grub2-mbr cd-boot-images/usr/share/cd-boot-images-amd64/images/boot/grub/i386-pc/boot_hybrid.img -append_partition 2 0xef cd-boot-images/usr/share/cd-boot-images-amd64/images/boot/grub/efi.img -appended_part_as_gpt -eltorito-alt-boot -e --interval\:appended_partition_2\:all\:\: -no-emul-boot -partition_offset 16 cd-boot-images/usr/share/cd-boot-images-amd64/tree CD1
-
-
-
+  -o "${ISO_OUT}" "${MNT_OUT}/";;
+  *) # Update xorriso for 20.10 onward?
+     #https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148
+     #From https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148/comments/195
+  xorriso \
+  -as mkisofs \
+  -r \
+  -checksum_algorithm_iso md5,sha1 \
+  -J -joliet-long \
+  -l \
+  -b boot/grub/i386-pc/eltorito.img -no-emul-boot \
+  -boot-load-size 4 \
+  -boot-info-table \
+  --grub2-boot-info \
+  --grub2-mbr /usr/share/cd-boot-images-amd64/images/boot/grub/i386-pc/boot_hybrid.img \
+  -append_partition 2 0xef /usr/share/cd-boot-images-amd64/images/boot/grub/efi.img \
+  -appended_part_as_gpt -eltorito-alt-boot -e --interval\:appended_partition_2\:all\:\: -no-emul-boot \
+  -partition_offset 16 /usr/share/cd-boot-images-amd64/tree \
+  -V "${VOL_ID}" \
+  -o "${ISO_OUT}" "${MNT_OUT}/";;
+esac
 chown -v "${SUDO_USER}":"${SUDO_USER}" "${ISO_OUT}"
 clean_up
