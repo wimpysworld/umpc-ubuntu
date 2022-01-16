@@ -10,7 +10,7 @@ function usage() {
     echo
     echo "OPTIONS"
     echo "    -d"
-    echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket2', 'gpd-micropc', 'gpd-p2-max', 'gpd-win-max' or 'topjoy-falcon'"
+    echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket2', 'gpd-pocket3', 'gpd-micropc', 'gpd-p2-max', 'gpd-win-max' or 'topjoy-falcon'"
     echo
     echo "    -h"
     echo "        display this help and exit"
@@ -73,7 +73,7 @@ ISO_IN="${@}"
 if [ -z "${UMPC}" ]; then
     echo "ERROR! You must supply the name of the device you want to apply modifications for."
     usage
-elif [ "${UMPC}" != "gpd-pocket" ] && [ "${UMPC}" != "gpd-pocket2" ] && [ "${UMPC}" != "gpd-micropc" ] && [ "${UMPC}" != "gpd-p2-max" ] && [ "${UMPC}" != "gpd-win-max" ] && [ "${UMPC}" != "topjoy-falcon" ]; then
+elif [ "${UMPC}" != "gpd-pocket" ] && [ "${UMPC}" != "gpd-pocket2" ] && [ "${UMPC}" != "gpd-pocket3" ] && [ "${UMPC}" != "gpd-micropc" ] && [ "${UMPC}" != "gpd-p2-max" ] && [ "${UMPC}" != "gpd-win-max" ] && [ "${UMPC}" != "topjoy-falcon" ]; then
     echo "ERROR! Unknown device name given."
     usage
 fi
@@ -99,6 +99,7 @@ SQUASH_IN="${MNT_IN}/casper/filesystem.squashfs"
 SQUASH_OUT="${MNT_OUT}/casper/squashfs-root"
 XORG_CONF_PATH="${SQUASH_OUT}/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
+MODPROBE_CONF="${SQUASH_OUT}/etc/modprobe.d/alsa-${UMPC}.conf"
 MONITOR_CONF="${XORG_CONF_PATH}/40-${UMPC}-monitor.conf"
 TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
 TOUCH_RULES="${SQUASH_OUT}/etc/udev/rules.d/99-${UMPC}-touch.rules"
@@ -170,6 +171,9 @@ inject_data "${TRACKPOINT_CONF}"
 
 # Rotate the touchscreen.
 inject_data "${TOUCH_RULES}"
+
+# Configure kernel modules
+inject_data "${MODPROBE_CONF}"
 
 # Apply device specific gschema overrides
 inject_data "${GSCHEMA_OVERRIDE}"

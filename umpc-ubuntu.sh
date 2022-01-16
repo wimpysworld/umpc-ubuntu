@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-# Set to either "gpd-pocket", "gpd-pocket2", "gpd-micropc", "gpd-p2-max", "gpd-win-max" or "topjoy-falcon"
-UMPC="gpd-pocket2"
+# Set to either "gpd-pocket", "gpd-pocket2", "gpd-pocket3", "gpd-micropc", "gpd-p2-max", "gpd-win-max" or "topjoy-falcon"
+UMPC="gpd-pocket3"
 XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
+MODPROBE_CONF="/etc/modprobe.d/alsa-${UMPC}.conf"
 MONITOR_CONF="${XORG_CONF_PATH}/40-${UMPC}-monitor.conf"
 TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
 TOUCH_RULES="/etc/udev/rules.d/99-${UMPC}-touch.rules"
@@ -51,14 +52,17 @@ function enable_umpc_config() {
   udevadm control --reload-rules
   udevadm trigger
 
+  # Configure kernel modules
+  inject_data "${MODPROBE_CONF}"
+
   # Apply device specific gschema overrides
   inject_data "${GSCHEMA_OVERRIDE}"
 
   # Add device specific EDID
   inject_data "${EDID}"
 
-# Add device specific /etc/grub.d configuration
-inject_data "${GRUB_D_CONF}"
+  # Add device specific /etc/grub.d configuration
+  inject_data "${GRUB_D_CONF}"
 
   # Add BRCM4356 firmware configuration
   if [ "${UMPC}" == "gpd-pocket" ]; then
