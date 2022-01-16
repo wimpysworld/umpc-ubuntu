@@ -60,7 +60,7 @@ fi
 
 if [ ! -f /usr/bin/xorriso ]; then
   echo "ERROR! Unable to find /usr/bin/xorriso. Installing now..."
-  apt -y install xorriso
+  apt-get -y install xorriso
 fi
 
 UMPC=""
