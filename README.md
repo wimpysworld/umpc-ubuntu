@@ -58,9 +58,9 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
 
 ## Known Issues
 
-### GPD Pocket, WIN 2, MicroPC, WIN Max and Topjoy Falcon
+### GPD Pocket, GPD Pocket 3, WIN 2, MicroPC, WIN Max and Topjoy Falcon
 
-  * The GRUB2 menu is rotated 90 degrees on the GPD Pocket, MicroPC and Topjoy Falcon.
+  * The GRUB menu is rotated 90 degrees on the GPD Pocket, MicroPC and Topjoy Falcon.
     * The workaround is to tilt your head.
   * The built in speaker in the GPD Pocket is mono and doesn't play audio from the right channel.
     * The workaround is to use headphones connected the 3.5mm audio jack.
@@ -71,7 +71,7 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * The workaround is to wait and the system will boot after a few seconds or press <kbd>Enter</kbd> to boot immediately.
     * However, **GRUB is fully functional and usable post-install**.
 
-### GPD WIN 2, GPD WIN Max & Topjoy Falcon
+### GPD Pocket 3, GPD WIN 2, GPD WIN Max & Topjoy Falcon
 
   * The Plymouth splash screen is not correctly orientated; and for the GPD WIN Max incorrectly coloured.
     * The workaround is to not care.
@@ -86,7 +86,7 @@ All Ubuntu flavours should work although if you use Wayland your mileage may var
 Install one of the Ubuntu 20.04 (or newer) flavours on a supported UMPC
 device and run the following to inject the required hardware configuration.
 
-```
+```bash
 git clone https://github.com/wimpysworld/umpc-ubuntu.git
 cd umpc-ubuntu
 sudo ./umpc-ubuntu.sh enable || disable
@@ -100,7 +100,7 @@ You must supply one of the following modes of operation
 
 ### umpc-ubuntu-respin.sh
 
-```
+```bash
 git clone https://github.com/wimpysworld/umpc-ubuntu.git
 cd umpc-ubuntu
 ```
@@ -159,11 +159,11 @@ xinput
 |   -------------  | ------------ | ---------- | -------- | ----------------------------------------- | ----------------------------- | ---------- | ---------- | ------------- |
 | GPD Pocket       | DSI-1 / DSI1 | 1200x1920  | Right    | SINO WEALTH Gaming Keyboard               | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket    |
 | GPD Pocket 2     | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
-| GPD Pocket 3     | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | GXTP7380 | >= 5.13    | >= 21.10 | gpd-pocket3   |
 | GPD WIN 2        | eDP-1 / eDP1 | 720x1280   | Right    | HK-ZYYK-US-A1-02-00 USB Keyboard Mouse    | Goodix Capacitive TouchScreen | >= 4.18    | >= 19.04   | gpd-pocket2   |
 | GPD MicroPC      | DSI-1 / DSI1 | 720x1280   | Right    | AMR-4630-XXX-0- 0-1023 USB KEYBOARD Mouse | n/a                           | >= 5.2     | >= 19.10   | gpd-micropc   |
 | GPD P2 Max       | eDP-1 / eDP1 | 2560x1600  | n/a      | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | ?          | >          | gpd-p2-max    |
 | GPD WIN Max      | eDP-1 / eDP1 | 800x1280   | Right    | HTIX5288:00 093A:0255 Mouse               | Goodix Capacitive TouchScreen | >= 5.4     | >= 20.04.1 | gpd-win-max   |
+| GPD Pocket 3     | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | GXTP7380                      | >= 5.13    | >= 21.10   | gpd-pocket3   |
 | OneMix Yoga      | ?            | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | ?             |
 | OneMix Yoga 1s   | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
 | OneMix Yoga 2    | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
