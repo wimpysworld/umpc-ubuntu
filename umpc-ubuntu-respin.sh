@@ -134,10 +134,10 @@ else
   fi
 fi
 
-if [ -f "${MNT_IN}/dists/stable/Release" ] && [ -f "${MNT_IN}/casper/filesystem.squashfs" ]; then
-  FLAVOUR=$(echo "${ISO_IN}" | cut -d'2' -f1 | sed 's/\(.*\)-/\1/')
-  VERSION=$(grep Version: "${MNT_IN}/dists/stable/Release" | cut -d':' -f2 | sed 's/ //g')
-  CODENAME=$(grep Codename: "${MNT_IN}/dists/stable/Release" | cut -d':' -f2 | sed 's/ //g')
+if [ -f "${MNT_IN}/.disk/info" ] && [ -f "${MNT_IN}/casper/filesystem.squashfs" ]; then
+  FLAVOUR=$(cut -d' ' -f1 < "${MNT_IN}/.disk/info")
+  VERSION=$(cut -d' ' -f2 < "${MNT_IN}/.disk/info")
+  CODENAME=$(cut -d'"' -f2 < "${MNT_IN}/.disk/info")
   echo "Modifying ${FLAVOUR} ${VERSION} (${CODENAME}) for the ${UMPC}"
 
   rsync -aHAXx --delete \
@@ -231,7 +231,7 @@ sync
 # Collect md5sums
 find "${MNT_OUT}" -type f -print0 | xargs -0 md5sum | sed 's|'"${MNT_OUT}"'|\.|g' > "${MNT_OUT}/md5sum.txt"
 
-VOL_ID=$(echo "${FLAVOUR^^}-${VERSION}-${UMPC^^}" | cut -c1-31)
+VOL_ID=$(echo "${FLAVOUR}-${VERSION}-${UMPC}" | cut -c1-31)
 rm -f "${ISO_OUT}" 2>/dev/null
 case ${ISO_BUILD} in
   old)
