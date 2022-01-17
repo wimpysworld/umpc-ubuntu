@@ -25,13 +25,11 @@ function inject_data() {
     local SOURCE_FILE="data/$(basename ${TARGET_FILE})"
   fi
 
-  echo " - Injecting ${TARGET_FILE}"
-
-  if [ ! -d "${TARGET_DIR}" ]; then
-    mkdir -p "${TARGET_DIR}"
-  fi
-
   if [ -f "${SOURCE_FILE}" ]; then
+    echo " - Injecting ${TARGET_FILE}"
+    if [ ! -d "${TARGET_DIR}" ]; then
+      mkdir -p "${TARGET_DIR}"
+    fi
     cp "${SOURCE_FILE}" "${TARGET_FILE}"
   fi
 }
