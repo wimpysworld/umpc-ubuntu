@@ -241,6 +241,10 @@ find "${MNT_OUT}" -type f -print0 | xargs -0 md5sum | sed 's|'"${MNT_OUT}"'|\.|g
 
 VOL_ID=$(echo "${FLAVOUR}-${VERSION}-${UMPC}" | cut -c1-31)
 rm -f "${ISO_OUT}" 2>/dev/null
+
+# Reference for new iso build:
+#  - https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148
+#  - From https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148/comments/195
 case ${ISO_BUILD} in
   old)
   xorriso \
@@ -262,9 +266,7 @@ case ${ISO_BUILD} in
   -isohybrid-apm-hfsplus \
   -volid "${VOL_ID}" \
   -o "${ISO_OUT}" "${MNT_OUT}/";;
-  *) # Update xorriso for 20.10 onward?
-     #https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148
-     #From https://bugs.launchpad.net/ubuntu-cdimage/+bug/1886148/comments/195
+  *)
   xorriso \
   -as mkisofs \
   -r \
