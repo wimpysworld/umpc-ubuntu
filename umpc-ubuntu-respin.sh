@@ -140,11 +140,11 @@ if [ -f "${MNT_IN}/.disk/info" ] && [ -f "${MNT_IN}/casper/filesystem.squashfs" 
   CODENAME=$(cut -d'"' -f2 < "${MNT_IN}/.disk/info")
   echo "Modifying ${FLAVOUR} ${VERSION} (${CODENAME}) for the ${UMPC}"
 
-  rsync -aHAXx --delete \
+  rsync -aHAXx --delete --quiet \
     --exclude=/casper/filesystem.squashfs \
     --exclude=/casper/filesystem.squashfs.gpg \
     --exclude=/md5sum.txt \
-    "${MNT_IN}/" "${MNT_OUT}/"
+    "${MNT_IN}/" "${MNT_OUT}/" 2>&1 >/dev/null
 
   # Extract the contents of the squashfs
   unsquashfs -f -d "${SQUASH_OUT}" "${SQUASH_IN}"
@@ -204,20 +204,20 @@ case ${UMPC} in
     ;;
 esac
 
-echo
-echo "Modified : ${GRUB_DEFAULT_CONF}"
-cat "${GRUB_DEFAULT_CONF}"
-echo
+#echo
+#echo "Modified : ${GRUB_DEFAULT_CONF}"
+#cat "${GRUB_DEFAULT_CONF}"
+#echo
 
-echo
-echo "Modified : ${GRUB_BOOT_CONF}"
-cat "${GRUB_BOOT_CONF}"
-echo
+#echo
+#echo "Modified : ${GRUB_BOOT_CONF}"
+#cat "${GRUB_BOOT_CONF}"
+#echo
 
-echo
-echo "Modified : ${GRUB_LOOPBACK_CONF}"
-cat "${GRUB_LOOPBACK_CONF}"
-echo
+#echo
+#echo "Modified : ${GRUB_LOOPBACK_CONF}"
+#cat "${GRUB_LOOPBACK_CONF}"
+#echo
 
 # Increase tty font size
 sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
