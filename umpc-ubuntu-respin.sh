@@ -149,9 +149,7 @@ if [ -f "${MNT_IN}/dists/stable/Release" ] && [ -f "${MNT_IN}/casper/filesystem.
     "${MNT_IN}/" "${MNT_OUT}/"
 
   # Extract the contents of the squashfs
-  cd "${MNT_OUT}/casper"
-  unsquashfs "${SQUASH_IN}"
-  cd -
+  unsquashfs -f -d "${SQUASH_OUT}" "${SQUASH_IN}"
   umount -l "${MNT_IN}"
 else
   echo "ERROR! This doesn't look like an Ubuntu iso image."
@@ -233,9 +231,7 @@ rm -rf "${SQUASH_OUT}"
 sync
 
 # Collect md5sums
-cd "${MNT_OUT}"
-find . -type f -print0 | xargs -0 md5sum >> "${MNT_OUT}/md5sum.txt"
-cd -
+find "${MNT_OUT}" -type f -print0 | xargs -0 md5sum | sed 's|'"${MNT_OUT}"'|\.|g' > "${MNT_OUT}/md5sum.txt"
 
 VOL_ID=$(echo "${FLAVOUR^^}-${VERSION}-${UMPC^^}" | cut -c1-31)
 rm -f "${ISO_OUT}" 2>/dev/null
