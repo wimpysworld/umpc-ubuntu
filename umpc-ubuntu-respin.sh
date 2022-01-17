@@ -219,8 +219,11 @@ esac
 #cat "${GRUB_LOOPBACK_CONF}"
 #echo
 
-# Increase tty font size
-sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+# Increase console font size
+case ${UMPC} in
+  gpd-win-max|gpd-micropc) true;;
+  *) sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}";;
+esac
 
 # Update filesystem size
 du -sx --block-size=1 "${SQUASH_OUT}" | cut -f1 > "${MNT_OUT}/casper/filesystem.size"
