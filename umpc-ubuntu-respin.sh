@@ -34,6 +34,11 @@ function inject_data() {
       mkdir -p "${TARGET_DIR}"
     fi
     cp "${SOURCE_FILE}" "${TARGET_FILE}"
+
+    # Rename the GDM3 monitors configuration
+    if [[ "${TARGET_FILE}" == *"monitors.xml"* ]]; then
+      mv -v "${TARGET_FILE}" "${TARGET_DIR}/monitors.xml"
+    fi
   fi
 }
 
@@ -99,6 +104,7 @@ XORG_CONF_PATH="${SQUASH_OUT}/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
 MODPROBE_CONF="${SQUASH_OUT}/etc/modprobe.d/alsa-${UMPC}.conf"
 MONITOR_CONF="${XORG_CONF_PATH}/40-${UMPC}-monitor.conf"
+MONITORS_XML="${SQUASH_OUT}/var/lib/gdm3/.config/${UMPC}-monitors.xml"
 TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
 TOUCH_RULES="${SQUASH_OUT}/etc/udev/rules.d/99-${UMPC}-touch.rules"
 BRCM4356_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
@@ -161,6 +167,7 @@ inject_data "${INTEL_CONF}"
 
 # Rotate the monitor.
 inject_data "${MONITOR_CONF}"
+inject_data "${MONITORS_XML}"
 
 # Scroll while holding down the right track point button
 inject_data "${TRACKPOINT_CONF}"

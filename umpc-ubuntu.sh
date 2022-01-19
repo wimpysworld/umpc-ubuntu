@@ -6,6 +6,7 @@ XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
 MODPROBE_CONF="/etc/modprobe.d/alsa-${UMPC}.conf"
 MONITOR_CONF="${XORG_CONF_PATH}/40-${UMPC}-monitor.conf"
+MONITORS_XML="/var/lib/gdm3/.config/${UMPC}-monitors.xml"
 TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
 TOUCH_RULES="/etc/udev/rules.d/99-${UMPC}-touch.rules"
 BRCM4356_CONF="/lib/firmware/brcm/brcmfmac4356-pcie.txt"
@@ -31,6 +32,11 @@ function inject_data() {
       mkdir -p "${TARGET_DIR}"
     fi
     cp "${SOURCE_FILE}" "${TARGET_FILE}"
+
+    # Rename the GDM3 monitors configuration
+    if [[ "${TARGET_FILE}" == *"monitors.xml"* ]]; then
+      mv -v "${TARGET_FILE}" "${TARGET_DIR}/monitors.xml"
+    fi
   fi
 }
 
@@ -40,6 +46,7 @@ function enable_umpc_config() {
 
   # Rotate the monitor.
   inject_data "${MONITOR_CONF}"
+  inject_data "${MONITORS_XML}"
 
   # Scroll while holding down the right track point button
   inject_data "${TRACKPOINT_CONF}"
@@ -80,7 +87,7 @@ function enable_umpc_config() {
 
 function disable_umpc_config() {
   # Remove the UMPC Pocket hardware configuration
-  for CONFIG in ${MONITOR_CONF} ${TOUCH_CONF} ${TRACKPOINT_CONF} ${GSCHEMA_OVERRIDE} ${EDID} ${BRCM4356_CONF}; do
+  for CONFIG in ${MONITOR_CONF} ${MONITORS_XML} ${TOUCH_CONF} ${TRACKPOINT_CONF} ${GSCHEMA_OVERRIDE} ${EDID} ${BRCM4356_CONF}; do
     if [ -f "${CONFIG}" ]; then
       rm -fv "${CONFIG}"
     fi
