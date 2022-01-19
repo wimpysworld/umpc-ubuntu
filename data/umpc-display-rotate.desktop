@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Display Rotator
+Comment=Automatic screen/touch rotation for UMPCs
+Keywords=UMPC;display;screen;rotate;
+Icon=preferences-desktop-display
+Exec=umpc-display-rotate
+OnlyShowIn=MATE;XFCE;
+Terminal=false
+Categories=GTK;Settings;HardwareSettings;
+StartupNotify=false
+X-MATE-Autostart-Phase=Application
+X-MATE-Autostart-Notify=false
