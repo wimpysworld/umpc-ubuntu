@@ -1,11 +1,13 @@
 [Desktop Entry]
-Name=UMPC Display Scaler
-Exec=umpc-display-scaler
-Icon=user-desktop
-Terminal=false
 Type=Application
-Categories=GTK;Settings;
+Name=Display Scaler
+Comment=Toggle fractional scaling for UMPC internal displays
+Keywords=UMPC;display;screen;scaling;
+Icon=preferences-desktop-display
+Exec=umpc-display-scaler
+OnlyShowIn=MATE;XFCE;
+Terminal=false
+Categories=GTK;Settings;HardwareSettings;
 StartupNotify=false
-OnlyShowIn=MATE;
-NoDisplay=true
-Comment=Scale up the internal display on UMPC laptops. Disable this Startup Program and log out to restore the native resolution.
+X-MATE-Autostart-Phase=Application
+X-MATE-Autostart-Notify=false

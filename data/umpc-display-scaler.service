@@ -1,0 +1,10 @@
+[Unit]
+Description=UMPC display scaler
+After=oem-config.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/umpc-display-scaler
+
+[Install]
+WantedBy=oem-config.service
