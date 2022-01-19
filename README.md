@@ -75,6 +75,10 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * The workaround is to wait and the system will boot after a few seconds or press <kbd>Enter</kbd> to boot immediately.
     * However, **GRUB is fully functional and usable post-install**.
 
+### GPD Pocket 3
+
+  * When a HDMI display is connected, the touch coordinates on the internal display are incorrect.
+
 ### GPD Pocket 3, GPD WIN 2, GPD WIN Max & Topjoy Falcon
 
   * The Plymouth splash screen is not correctly orientated; and for the GPD WIN Max incorrectly coloured.
