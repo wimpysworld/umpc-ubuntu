@@ -1,5 +1,8 @@
 [x.dm.slick-greeter]
 enable-hidpi='on'
 
+[org.ArcticaProject.arctica-greeter]
+enable-hidpi='on'
+
 [org.mate.interface]
 window-scaling-factor=2
