@@ -47,13 +47,17 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
   * Enable touch screen rotation for Xorg and Wayland.
   * Enable **scroll wheel emulation** for Xorg.
     * While holding down the **right track point button** on the Pocket, Pocket 2 & Topjoy Falcon.
-    * While holding down the **centre track point button** on the MicroPC.
-  * Enable double size console (tty) font resolution.
+    * While holding down the **centre track point button** on the MicroPC & Pocket 3.
+  * Enable double size console (tty) font resolution for high resolution devices.
+  * Enable **fractional scaling** for 1920x1200 displays. *(MATE Desktop only)*
+    * Results in an effective resolution of 1280x800 to make the display panels easily readable.
+    * Simple to toggle on/off if you want to restore full resolution.
   * **GRUB is usable post-install**.
     * GPD Pocket, WIN 2, MicroPC & TopJoy Falcon GRUB is rotated 90 degrees, but functional.
     * GPD Pocket 2 and GPD P2 Max GRUB is correctly rotated and functional.
   * GPD Pocket BRMC4356 WiFi firmware enabled by default.
   * GPD Pocket fan control kernel module enable by default.
+  * GPD Pocket 3 & TopJoy Falcon **accelerometer support for automatic screen rotation**.
   * GPD WIN Max features a custom, persistent, EDID.
 
 ## Known Issues
@@ -120,31 +124,23 @@ sudo ./umpc-ubuntu-respin.sh -d topjoy-falcon ubuntu-mate-20.04.3-desktop-amd64.
 A new .iso will be created that includes the additional hardware tweaks
 required by the selected UMPC device.
 
-## Accessing UMPC boot menus
+## Accessing boot menus & BIOS
 
-### GPD Pocket, GPD MicroPC, GPD P2 Max, GPD Pocket 3, OneMix Yoga 2
+Switch the device on, immediately hold/tap the corresponding key(s).
 
-Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F7</kbd> key until the Boot Manager screen appears.
+|      Device      |      BIOS    |  Boot  Menu  |
+|   -------------  | ------------ | ------------ |
+| GPD Pocket       | `Fn` + `F7`  | `Fn` + `F7`  |
+| GPD Pocket 2     | `Fn` + `F12` | `Fn` + `F12` |
+| GPD Pocket 3     | `Fn` + `F7`  | `Fn` + `F7`  |
+| GPD WIN 2(!)     |    `Del`     |    `Del`     |
+| GPD MicroPC      | `Fn` + `F7`  | `Fn` + `F7`  |
+| GPD P2 Max       | `Fn` + `F7`  | `Fn` + `F7`  |
+| GPD WIN Max      |     `F7`     |     `F7`     |
+| OneMix Yoga 2    | `Fn` + `F7`  | `Fn` + `F7`  |
+| TopJoy Falcon    | `Fn` + `F2`  | `Fn` + `F12` |
 
-### GPD Win Max
-
-Switch the device on, immediately hold the <kbd>F7</kbd> key until the Boot Manager screen appears.
-
-### GPD Pocket 2 & Topjoy Falcon
-
-Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F12</kbd> key until the Boot Manager screen appears.
-
-## Accessing UMPC BIOS menus
-
-### GPD WIN 2
-
-Switch the device on, when the GPD logo is displayed press <kbd>Del</kbd> to
-enter the BIOS, navigate to *Save & Exit* and choose the storage device you
-want to boot from under *Boot Override*
-
-### Topjoy Falcon
-
-Switch the device on, immediately hold the <kbd>Fn</kbd> key and tap the <kbd>F2</kbd> key until the BIOS appears.
+  * **GPD WIN 2(!)**: Navigate to *Save & Exit* and choose the storage device you want to boot from under *Boot Override* |
 
 ## Device matrix
 
@@ -159,11 +155,11 @@ xinput
 |   -------------  | ------------ | ---------- | -------- | ----------------------------------------- | ----------------------------- | ---------- | ---------- | ------------- |
 | GPD Pocket       | DSI-1 / DSI1 | 1200x1920  | Right    | SINO WEALTH Gaming Keyboard               | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket    |
 | GPD Pocket 2     | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
+| GPD Pocket 3     | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | GXTP7380:00 27C6:0113         | >= 5.13    | >= 21.10   | gpd-pocket3   |
 | GPD WIN 2        | eDP-1 / eDP1 | 720x1280   | Right    | HK-ZYYK-US-A1-02-00 USB Keyboard Mouse    | Goodix Capacitive TouchScreen | >= 4.18    | >= 19.04   | gpd-pocket2   |
 | GPD MicroPC      | DSI-1 / DSI1 | 720x1280   | Right    | AMR-4630-XXX-0- 0-1023 USB KEYBOARD Mouse | n/a                           | >= 5.2     | >= 19.10   | gpd-micropc   |
 | GPD P2 Max       | eDP-1 / eDP1 | 2560x1600  | n/a      | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | ?          | >          | gpd-p2-max    |
 | GPD WIN Max      | eDP-1 / eDP1 | 800x1280   | Right    | HTIX5288:00 093A:0255 Mouse               | Goodix Capacitive TouchScreen | >= 5.4     | >= 20.04.1 | gpd-win-max   |
-| GPD Pocket 3     | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | GXTP7380                      | >= 5.13    | >= 21.10   | gpd-pocket3   |
 | OneMix Yoga      | ?            | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | ?             |
 | OneMix Yoga 1s   | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
 | OneMix Yoga 2    | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
