@@ -12,11 +12,11 @@ esac
 
 PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g' | sed 's/-//g')
 if [ "${PRIMARY_DISPLAY}" == "eDP1" ] || [ "${PRIMARY_DISPLAY}" == "DSI1" ]; then
-  xset dpms force off
+  xrandr --output "${PRIMARY_DISPLAY}" --brightness 0
   xrandr --output "${PRIMARY_DISPLAY}" --scale "${SCALE}x${SCALE}"
   sleep 0.85
+  xrandr --output "${PRIMARY_DISPLAY}" --brightness 1
   notify-send --expire-time=5000 --icon=info "${NOTIFY} (${PRIMARY_DISPLAY})"
-  xset dpms force on
 else
   notify-send --expire-time=5000 --icon=error "The primary display (${PRIMARY_DISPLAY}) is not compatible with UMPC Display Scaler."
 fi
