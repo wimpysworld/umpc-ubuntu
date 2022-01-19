@@ -107,14 +107,12 @@ MONITOR_CONF="${XORG_CONF_PATH}/40-${UMPC}-monitor.conf"
 MONITORS_XML="${SQUASH_OUT}/var/lib/gdm3/.config/${UMPC}-monitors.xml"
 TRACKPOINT_CONF="${XORG_CONF_PATH}/80-${UMPC}-trackpoint.conf"
 TOUCH_RULES="${SQUASH_OUT}/etc/udev/rules.d/99-${UMPC}-touch.rules"
-BRCM4356_CONF="${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
 GRUB_DEFAULT_CONF="${SQUASH_OUT}/etc/default/grub"
 GRUB_D_CONF="${SQUASH_OUT}/etc/default/grub.d/${UMPC}.cfg"
 GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
 GRUB_LOOPBACK_CONF="${MNT_OUT}/boot/grub/loopback.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
 GSCHEMA_OVERRIDE="${SQUASH_OUT}/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
-EDID="${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
 
 # Copy the contents of the ISO
 mkdir -p "${MNT_IN}"
@@ -181,30 +179,52 @@ inject_data "${MODPROBE_CONF}"
 # Apply device specific gschema overrides
 inject_data "${GSCHEMA_OVERRIDE}"
 
-# Add device specific EDID
-inject_data "${EDID}"
-
 # Add device specific /etc/grub.d configuration
 inject_data "${GRUB_D_CONF}"
 
-# Add BRCM4356 firmware configuration
-if [ "${UMPC}" == "gpd-pocket" ]; then
-  inject_data "${BRCM4356_CONF}"
-fi
-
-# Rotate the framebuffer
+# Device specific tweaks
 case ${UMPC} in
-  gpd-win-max)
-    sed -i "s/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1/" "${GRUB_DEFAULT_CONF}"
-    sed -i "s/quiet splash/video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
-    sed -i "s/quiet splash/video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
+  gpd-pocket)
+    # Add BRCM4356 firmware configuration
+    inject_data "${SQUASH_OUT}/lib/firmware/brcm/brcmfmac4356-pcie.txt"
+
+    # Frame buffer rotation
+    sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
     ;;
   gpd-pocket3)
+    # Add automatic screen rotation
+    gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
+    inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
+
+    # Frame buffer rotation and s2idle by default.
+    # s2idle is a temporary workaround, until this patch is in Ubuntu:
+    # - https://github.com/torvalds/linux/commit/d3c4b6f64ad356c0d9ddbcf73fa471e6a841cc5c
+    # - https://bugzilla.kernel.org/show_bug.cgi?id=214271
     sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1 mem_sleep_default=s2idle/' "${GRUB_DEFAULT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
     ;;
+  gpd-win-max)
+    # Add device specific EDID
+    inject_data "${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
+    sed -i "s/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1/" "${GRUB_DEFAULT_CONF}"
+    sed -i "s/quiet splash/video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
+    sed -i "s/quiet splash/video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
+    ;;
+  topjoy-falcon)
+    # Add automatic screen rotation
+    gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
+    inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
+
+    # Frame buffer rotation
+    sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+    ;;
   *)
+    # Frame buffer rotation
     sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
@@ -226,10 +246,16 @@ esac
 #cat "${GRUB_LOOPBACK_CONF}"
 #echo
 
-# Increase console font size
+# Increase console font size and add the display scaler
 case ${UMPC} in
   gpd-win-max|gpd-micropc) true;;
-  *) sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}";;
+  *) sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+     inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
+     inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
+     inject_data "${SQUASH_OUT}/usr/share/applications/umpc-display-scaler.desktop"
+     #inject_data "${SQUASH_OUT}/lib/systemd/system/umpc-display-scaler.service"
+     #ln -sf /lib/systemd/system/umpc-display-scaler.service "${SQUASH_OUT}/etc/systemd/system/oem-config.service.wants/"
+     ;;
 esac
 
 # Update filesystem size

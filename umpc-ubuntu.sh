@@ -63,24 +63,45 @@ function enable_umpc_config() {
   # Apply device specific gschema overrides
   inject_data "${GSCHEMA_OVERRIDE}"
 
-  # Add device specific EDID
-  inject_data "${EDID}"
-
   # Add device specific /etc/grub.d configuration
   inject_data "${GRUB_D_CONF}"
 
-  # Add BRCM4356 firmware configuration
-  if [ "${UMPC}" == "gpd-pocket" ]; then
-    inject_data "${BRCM4356_CONF}"
-    # Reload the brcmfmac kernel module
-    modprobe -r brcmfmac
-    modprobe brcmfmac
-  fi
+  # Device specific tweaks
+  case ${UMPC} in
+    gpd-pocket)
+      # Add BRCM4356 firmware configuration
+      inject_data "${BRCM4356_CONF}"
+      # Reload the brcmfmac kernel module
+      modprobe -r brcmfmac
+      modprobe brcmfmac
+      ;;
+    gpd-pocket3)
+      # Add automatic screen rotation
+      gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
+      inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
+      ;;
+    gpd-win-max)
+      # Add device specific EDID
+      inject_data "${EDID}"
+      ;;
+    topjoy-falcon)
+      # Add automatic screen rotation
+      gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
+      inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
+      ;;
+  esac
 
   update-grub
 
-  # Increase tty font size
-  sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+  # Increase console font size and add the display scaler
+  case ${UMPC} in
+    gpd-win-max|gpd-micropc) true;;
+    *) sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+       inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
+       inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
+       inject_data "${SQUASH_OUT}/usr/share/applications/umpc-display-scaler.desktop"
+       ;;
+  esac
 
   echo "UMPC hardware configuration is applied. Please reboot to complete the setup."
 }
@@ -94,13 +115,19 @@ function disable_umpc_config() {
   done
 
   # Remove the framebuffer rotation
-  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="video=efifb fbcon=rotate:1 quiet/GRUB_CMDLINE_LINUX_DEFAULT="quiet/' "${GRUB_DEFAULT_CONF}"
-  sed -i 's/GRUB_CMDLINE_LINUX="video=efifb fbcon=rotate:1"/GRUB_CMDLINE_LINUX=""/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="fbcon=rotate:1 quiet/GRUB_CMDLINE_LINUX_DEFAULT="quiet/' "${GRUB_DEFAULT_CONF}"
+  sed -i 's/GRUB_CMDLINE_LINUX="fbcon=rotate:1"/GRUB_CMDLINE_LINUX=""/' "${GRUB_DEFAULT_CONF}"
   sed -i '/GRUB_GFXMODE=1200x1920x32/d' "${GRUB_DEFAULT_CONF}"
   update-grub
 
   # Restore tty font size
   sed -i 's/FONTSIZE=16x32"/FONTSIZE="8x16"/' "${CONSOLE_CONF}"
+  # Remove apps
+  rm -fv /usr/bin/umpc-display-rotate
+  rm -fv /etc/xdg/autostart/umpc-display-rotate.desktop
+  rm -fv /usr/bin/umpc-display-scaler
+  rm -fv /etc/xdg/autostart/umpc-display-scaler.desktop
+  rm -fv /usr/share/applications/umpc-display-scaler.desktop
 
   echo "UMPC hardware configuration is removed. Please reboot to complete the setup."
 }
