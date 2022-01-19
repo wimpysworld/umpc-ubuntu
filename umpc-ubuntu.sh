@@ -125,7 +125,7 @@ if [ "${XDG_SESSION_TYPE}" == "wayland" ]; then
 fi
 
 # Make sure we are root.
-if [ $(id -u) -ne 0 ]; then
+if [ "$(id -u)" -ne 0 ]; then
   echo "ERROR! You must be root to run $(basename $0)"
   exit 1
 fi

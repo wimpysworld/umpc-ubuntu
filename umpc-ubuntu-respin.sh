@@ -51,7 +51,7 @@ function clean_up() {
 }
 
 # Make sure we are root.
-if [ $(id -u) -ne 0 ]; then
+if [ "$(id -u)" -ne 0 ]; then
   echo "ERROR! You must be root to run $(basename $0)"
   exit 1
 fi
@@ -70,8 +70,8 @@ while getopts ${OPTSTRING} OPT; do
         *) usage;;
     esac
 done
-shift "$(( $OPTIND - 1 ))"
-ISO_IN="${@}"
+shift "$((OPTIND - 1))"
+ISO_IN="${1}"
 
 if [ -z "${UMPC}" ]; then
     echo "ERROR! You must supply the name of the device you want to apply modifications for."
