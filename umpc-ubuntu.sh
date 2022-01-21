@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Set to either "gpd-pocket", "gpd-pocket2", "gpd-pocket3", "gpd-micropc", "gpd-p2-max", "gpd-win-max" or "topjoy-falcon"
+# Set to either "gpd-pocket", "gpd-pocket2", "gpd-pocket3", "gpd-p2-max", "gpd-micropc", "gpd-win2", "gpd-win-max" or "topjoy-falcon"
 UMPC="gpd-pocket3"
 XORG_CONF_PATH="/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
@@ -94,16 +94,6 @@ function enable_umpc_config() {
 
   update-grub
 
-  # Increase console font size and add the display scaler
-  case ${UMPC} in
-    gpd-win-max|gpd-micropc) true;;
-    *) sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
-       inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
-       inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
-       inject_data "${SQUASH_OUT}/usr/share/applications/umpc-display-scaler.desktop"
-       ;;
-  esac
-
   echo "UMPC hardware configuration is applied. Please reboot to complete the setup."
 }
 
@@ -165,6 +155,17 @@ if [ -z "${1}" ]; then
 else
   MODE=$(echo "${1}" | tr '[:upper:]' '[:lower:]')
 fi
+
+if [ -z "${UMPC}" ]; then
+    echo "ERROR! You must supply the name of the device you want to apply modifications for."
+    usage
+fi
+
+case "${UMPC}" in
+  gpd-pocket|gpd-pocket2|gpd-pocket3|gpd-micropc|gpd-p2-max|gpd-win2|gpd-win-max|topjoy-falcon) true;;
+  *) echo "ERROR! Unknown device name given."
+     usage;;
+esac
 
 case "${MODE}" in
   -d|--disable|disable)
