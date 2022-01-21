@@ -195,16 +195,65 @@ case ${UMPC} in
     sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+
+    # Increase console font size
+    sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
+    # Display scaler
+    inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
+    inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
+    inject_data "${SQUASH_OUT}/usr/share/applications/umpc-display-scaler.desktop"
+    ;;
+  gpd-pocket2)
+    # Frame buffer rotation
+    sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+
+    # Increase console font size
+    sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
+    # Display scaler
+    inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
+    inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
+    inject_data "${SQUASH_OUT}/usr/share/applications/umpc-display-scaler.desktop"
     ;;
   gpd-pocket3)
-    # Add automatic screen rotation
-    gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
-    inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
-
     # Frame buffer rotation and s2idle by default.
     # s2idle is a temporary workaround, until this patch is in Ubuntu:
     # - https://github.com/torvalds/linux/commit/d3c4b6f64ad356c0d9ddbcf73fa471e6a841cc5c
     # - https://bugzilla.kernel.org/show_bug.cgi?id=214271
+    sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1 mem_sleep_default=s2idle/' "${GRUB_DEFAULT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+
+    # Increase console font size
+    sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
+    # Add automatic screen rotation
+    gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
+    inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
+
+    # Display scaler
+    inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
+    inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
+    inject_data "${SQUASH_OUT}/usr/share/applications/umpc-display-scaler.desktop"
+    #inject_data "${SQUASH_OUT}/lib/systemd/system/umpc-display-scaler.service"
+    #ln -sf /lib/systemd/system/umpc-display-scaler.service "${SQUASH_OUT}/etc/systemd/system/oem-config.service.wants/"
+    ;;
+  gpd-p2-max)
+    # Increase console font size
+    sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+    ;;
+  gpd-micropc)
+    # Frame buffer rotation
+    sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+    ;;
+  gpd-win2)
+    # Frame buffer rotation
+    # s2idle is required to wake from suspend.
     sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1 mem_sleep_default=s2idle/' "${GRUB_DEFAULT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
@@ -217,20 +266,28 @@ case ${UMPC} in
     sed -i "s/quiet splash/video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
     ;;
   topjoy-falcon)
+    # Frame buffer rotation
+    sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+
+    # Increase console font size
+    sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
     # Add automatic screen rotation
     gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
     inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
 
-    # Frame buffer rotation
-    sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
-    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
-    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+    # Display scaler
+    inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
+    inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
+    inject_data "${SQUASH_OUT}/usr/share/applications/umpc-display-scaler.desktop"
+    #inject_data "${SQUASH_OUT}/lib/systemd/system/umpc-display-scaler.service"
+    #ln -sf /lib/systemd/system/umpc-display-scaler.service "${SQUASH_OUT}/etc/systemd/system/oem-config.service.wants/"
     ;;
   *)
-    # Frame buffer rotation
-    sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1/' "${GRUB_DEFAULT_CONF}"
-    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
-    sed -i 's/quiet splash/fbcon=rotate:1 fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+    echo "ERROR! No device configuration for ${UMPC}!"
+    exit 1
     ;;
 esac
 

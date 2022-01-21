@@ -75,20 +75,61 @@ function enable_umpc_config() {
       # Reload the brcmfmac kernel module
       modprobe -r brcmfmac
       modprobe brcmfmac
+
+      # Increase console font size
+      sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
+      # Display Scaler
+      inject_data "/usr/bin/umpc-display-scaler"
+      inject_data "/etc/xdg/autostart/umpc-display-scaler.desktop"
+      inject_data "/usr/share/applications/umpc-display-scaler.desktop"
+      ;;
+    gpd-pocket2)
+      # Increase console font size
+      sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
+      # Display Scaler
+      inject_data "/usr/bin/umpc-display-scaler"
+      inject_data "/etc/xdg/autostart/umpc-display-scaler.desktop"
+      inject_data "/usr/share/applications/umpc-display-scaler.desktop"
       ;;
     gpd-pocket3)
+      # Increase console font size
+      sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
       # Add automatic screen rotation
-      gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
-      inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
+      gcc -O2 "data/umpc-display-rotate.c" -o "/usr/bin/umpc-display-rotate" -lm
+      inject_data "/etc/xdg/autostart/umpc-display-rotate.desktop"
+
+      # Display Scaler
+      inject_data "/usr/bin/umpc-display-scaler"
+      inject_data "/etc/xdg/autostart/umpc-display-scaler.desktop"
+      inject_data "/usr/share/applications/umpc-display-scaler.desktop"
       ;;
+    gpd-p2-max)
+      # Increase console font size
+      sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+      ;;
+    gpd-micropc)
+      true;;
+    gpd-win2)
+      true;;
     gpd-win-max)
       # Add device specific EDID
       inject_data "${EDID}"
       ;;
     topjoy-falcon)
+      # Increase console font size
+      sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' "${CONSOLE_CONF}"
+
       # Add automatic screen rotation
-      gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
-      inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
+      gcc -O2 "data/umpc-display-rotate.c" -o "/usr/bin/umpc-display-rotate" -lm
+      inject_data "/etc/xdg/autostart/umpc-display-rotate.desktop"
+
+      # Display Scaler
+      inject_data "/usr/bin/umpc-display-scaler"
+      inject_data "/etc/xdg/autostart/umpc-display-scaler.desktop"
+      inject_data "/usr/share/applications/umpc-display-scaler.desktop"
       ;;
   esac
 
