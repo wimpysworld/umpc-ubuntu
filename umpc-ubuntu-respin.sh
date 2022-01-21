@@ -116,6 +116,7 @@ GRUB_BOOT_CONF="${MNT_OUT}/boot/grub/grub.cfg"
 GRUB_LOOPBACK_CONF="${MNT_OUT}/boot/grub/loopback.cfg"
 CONSOLE_CONF="${SQUASH_OUT}/etc/default/console-setup"
 GSCHEMA_OVERRIDE="${SQUASH_OUT}/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
+HWDB_CONF="${SQUASH_OUT}/etc/udev/hwdb.d/61-${UMPC}-sensor-local.hwdb"
 
 # Copy the contents of the ISO
 mkdir -p "${MNT_IN}"
@@ -233,6 +234,7 @@ case ${UMPC} in
     # Add automatic screen rotation
     gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
     inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
+    inject_data "${HWDB_CONF}"
 
     # Display scaler
     inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
@@ -277,6 +279,7 @@ case ${UMPC} in
     # Add automatic screen rotation
     gcc -O2 "data/umpc-display-rotate.c" -o "${SQUASH_OUT}/usr/bin/umpc-display-rotate" -lm
     inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-rotate.desktop"
+    inject_data "${HWDB_CONF}"
 
     # Display scaler
     inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"

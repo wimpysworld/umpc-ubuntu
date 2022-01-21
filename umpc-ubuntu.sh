@@ -15,6 +15,7 @@ GRUB_D_CONF="/etc/default/grub.d/${UMPC}.cfg"
 CONSOLE_CONF="/etc/default/console-setup"
 GSCHEMA_OVERRIDE="/usr/share/glib-2.0/schemas/90-${UMPC}.gschema.override"
 EDID="/lib/firmware/edid/${UMPC}-edid.bin"
+HWDB_CONF="/etc/udev/hwdb.d/61-${UMPC}-sensor-local.hwdb"
 
 # Copy file from /data to it's intended location
 function inject_data() {
@@ -100,6 +101,10 @@ function enable_umpc_config() {
       # Add automatic screen rotation
       gcc -O2 "data/umpc-display-rotate.c" -o "/usr/bin/umpc-display-rotate" -lm
       inject_data "/etc/xdg/autostart/umpc-display-rotate.desktop"
+      inject_data "${HWDB_CONF}"
+      systemd-hwdb update
+      udevadm trigger -v -p DEVNAME=/dev/iio:device0
+      systemctl restart iio-sensor-proxy.service
 
       # Display Scaler
       inject_data "/usr/bin/umpc-display-scaler"
@@ -125,6 +130,10 @@ function enable_umpc_config() {
       # Add automatic screen rotation
       gcc -O2 "data/umpc-display-rotate.c" -o "/usr/bin/umpc-display-rotate" -lm
       inject_data "/etc/xdg/autostart/umpc-display-rotate.desktop"
+      inject_data "${HWDB_CONF}"
+      systemd-hwdb update
+      udevadm trigger -v -p DEVNAME=/dev/iio:device0
+      systemctl restart iio-sensor-proxy.service
 
       # Display Scaler
       inject_data "/usr/bin/umpc-display-scaler"
