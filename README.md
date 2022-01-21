@@ -56,7 +56,7 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
     * GPD Pocket, WIN 2, MicroPC & TopJoy Falcon GRUB is rotated 90 degrees, but functional.
     * GPD Pocket 2 and GPD P2 Max GRUB is correctly rotated and functional.
   * GPD Pocket BRMC4356 WiFi firmware enabled by default.
-  * GPD Pocket fan control kernel module enable by default.
+  * GPD Pocket fan control kernel module enabled by default.
   * GPD Pocket 3 & TopJoy Falcon **accelerometer support for automatic screen rotation**.
   * GPD WIN Max features a custom, persistent, EDID.
 
@@ -144,7 +144,7 @@ Switch the device on, immediately hold/tap the corresponding key(s).
 | OneMix Yoga 2    | `Fn` + `F7`  | `Fn` + `F7`  |
 | TopJoy Falcon    | `Fn` + `F2`  | `Fn` + `F12` |
 
-  * **GPD WIN 2(!)**: Navigate to *Save & Exit* and choose the storage device you want to boot from under *Boot Override* |
+  * **GPD WIN 2(!)**: Navigate to *Save & Exit* and choose the storage device you want to boot from under *Boot Override*
 
 ## Device matrix
 
