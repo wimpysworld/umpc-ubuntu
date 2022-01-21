@@ -16,8 +16,12 @@ for ISO_IN in ubuntu-mate-20.04.3-desktop-amd64.iso ubuntu-mate-21.10-desktop-am
     else
       echo " - ${ISO_OUT} is already built."
     fi
-    if [ -x "${HOME}/Scripts/mate/sign_image.sh" ] && [ ! -e "${ISO_OUT}.sha256" ]; then
-      ~/Scripts/mate/sign_image.sh "${ISO_OUT}"
+    if [ -x "${HOME}/Scripts/mate/sign_image.sh" ]; then
+      if [ ! -e "${ISO_OUT}.sha256" ]; then
+        "${HOME}"/Scripts/mate/sign_image.sh "${ISO_OUT}"
+      else
+        echo " - ${ISO_OUT} is already signed."
+      fi
     else
       echo " - Image signer not found."
     fi
