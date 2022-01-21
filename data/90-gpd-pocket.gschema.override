@@ -1,0 +1,5 @@
+[x.dm.slick-greeter]
+enable-hidpi='on'
+
+[org.ArcticaProject.arctica-greeter]
+enable-hidpi='on'
