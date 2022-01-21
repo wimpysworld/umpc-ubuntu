@@ -18,12 +18,13 @@ EDID="/lib/firmware/edid/${UMPC}-edid.bin"
 
 # Copy file from /data to it's intended location
 function inject_data() {
+  local SOURCE_FILE=""
   local TARGET_FILE="${1}"
   local TARGET_DIR=$(dirname "${TARGET_FILE}")
   if [ -n "${2}" ] && [ -f "${2}" ]; then
-    local SOURCE_FILE="${2}"
+    SOURCE_FILE="${2}"
   else
-    local SOURCE_FILE="data/$(basename ${TARGET_FILE})"
+    SOURCE_FILE="data/$(basename "${TARGET_FILE}")"
   fi
 
   if [ -f "${SOURCE_FILE}" ]; then

@@ -3,10 +3,10 @@
 function usage() {
     echo
     echo "NAME"
-    echo "    $(basename ${0}) - Apply GPD/TopJoy device modifications to an Ubuntu .iso image."
+    echo "    $(basename "${0}") - Apply GPD/TopJoy device modifications to an Ubuntu .iso image."
     echo
     echo "SYNOPSIS"
-    echo "    $(basename ${0}) [ options ] [ ubuntu iso image ]"
+    echo "    $(basename "${0}") [ options ] [ ubuntu iso image ]"
     echo
     echo "OPTIONS"
     echo "    -d"
