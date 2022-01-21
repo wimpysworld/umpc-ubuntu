@@ -52,7 +52,7 @@ function clean_up() {
 
 # Make sure we are root.
 if [ "$(id -u)" -ne 0 ]; then
-  echo "ERROR! You must be root to run $(basename $0)"
+  echo "ERROR! You must be root to run $(basename "${0}")"
   exit 1
 fi
 
