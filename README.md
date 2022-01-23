@@ -62,27 +62,35 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
 
 ## Known Issues
 
-### GPD Pocket, GPD Pocket 3, WIN 2, MicroPC, WIN Max and Topjoy Falcon
+### The GRUB menu is rotated 90 degrees
 
-  * The GRUB menu is rotated 90 degrees on the GPD Pocket, MicroPC and Topjoy Falcon.
-    * The workaround is to tilt your head.
-  * The built in speaker in the GPD Pocket is mono and doesn't play audio from the right channel.
-    * The workaround is to use headphones connected the 3.5mm audio jack.
+The workaround is to tilt your head. Issue affects:
 
-### GPD Pocket 2
+  * GPD Pocket
+  * GPD Pocket 3
+  * GPD MicroPC
+  * GPD WIN 2
+  * GPD WIN Max
+  * TopJoy Falcon
 
-  * The boot menu is not displayed in the GPD Pocket 2 live media.
-    * The workaround is to wait and the system will boot after a few seconds or press <kbd>Enter</kbd> to boot immediately.
-    * However, **GRUB is fully functional and usable post-install**.
+### Boot splash is rootated 90 degrees
 
-### GPD Pocket 3
+The workaround is to tilt your head. Issue affects:
 
-  * When a HDMI display is connected, the touch coordinates on the internal display are incorrect.
+  * GPD WIN Max
 
-### GPD Pocket 3, GPD WIN 2, GPD WIN Max & Topjoy Falcon
+## Built-in speaker doesn't play audio from the right channel.
 
-  * The Plymouth splash screen is not correctly orientated; and for the GPD WIN Max incorrectly coloured.
-    * The workaround is to not care.
+The workaround is to use headphones connected the 3.5mm audio jack or
+[apply configuration changes](https://www.reddit.com/r/GPDPocket/comments/7ihln2/linux_audio_mixing_for_mono_speaker_fixed/). Issue affects:
+
+  * GPD Pocket
+
+### Touch coordinates incorrect when external HDMI monitor is connected
+
+When a HDMI display is connected, the touch coordinates on the internal display are incorrect. Issue affects:
+
+  * GPD Pocket 3
 
 ## The Scripts
 
@@ -138,7 +146,7 @@ Switch the device on, immediately hold/tap the corresponding key(s).
 | GPD Pocket 2     | `Fn` + `F12` | `Fn` + `F12` |
 | GPD Pocket 3     | `Fn` + `F7`  | `Fn` + `F7`  |
 | GPD WIN 2(!)     |    `Del`     |    `Del`     |
-| GPD MicroPC      | `Fn` + `F7`  | `Fn` + `F7`  |
+| GPD MicroPC      |    `Del`     | `Fn` + `F7`  |
 | GPD P2 Max       | `Fn` + `F7`  | `Fn` + `F7`  |
 | GPD WIN Max      |     `F7`     |     `F7`     |
 | OneMix Yoga 2    | `Fn` + `F7`  | `Fn` + `F7`  |
@@ -157,7 +165,7 @@ xinput
 
 |      Device      |    Monitor   | Resolution | Rotation |              Keyboard/Mouse               |          Touch Screen         | Kernel Req | Ubuntu Req |    Common     |
 |   -------------  | ------------ | ---------- | -------- | ----------------------------------------- | ----------------------------- | ---------- | ---------- | ------------- |
-| GPD Pocket       | DSI-1 / DSI1 | 1200x1920  | Right    | SINO WEALTH Gaming Keyboard               | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket    |
+| GPD Pocket       | DSI-1 / DSI1 | 1200x1920  | Right    | SINO WEALTH Gaming Keyboard               | Goodix Capacitive TouchScreen | >= 4.12    | >= 18.04.2 | gpd-pocket    |
 | GPD Pocket 2     | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
 | GPD Pocket 3     | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | GXTP7380:00 27C6:0113         | >= 5.13    | >= 21.10   | gpd-pocket3   |
 | GPD WIN 2        | eDP-1 / eDP1 | 720x1280   | Right    | HK-ZYYK-US-A1-02-00 USB Keyboard Mouse    | Goodix Capacitive TouchScreen | >= 4.18    | >= 19.04   | gpd-win2      |
