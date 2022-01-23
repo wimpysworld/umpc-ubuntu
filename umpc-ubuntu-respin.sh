@@ -263,9 +263,9 @@ case ${UMPC} in
   gpd-win-max)
     # Add device specific EDID
     inject_data "${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
-    sed -i "s/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1/" "${GRUB_DEFAULT_CONF}"
-    sed -i "s/quiet splash/video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
-    sed -i "s/quiet splash/video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fbcon=rotate:1 fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
+    sed -i "s/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"fbcon=rotate:1 video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin/" "${GRUB_DEFAULT_CONF}"
+    sed -i "s/quiet splash/fbcon=rotate:1 video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
+    sed -i "s/quiet splash/fbcon=rotate:1 video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
     ;;
   topjoy-falcon)
     # Frame buffer rotation
