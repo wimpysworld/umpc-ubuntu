@@ -41,7 +41,7 @@ Yoga devices are also supported.
 
 The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the following tweaks:
 
-  * Enable **frame buffer and Xorg display rotation**.
+  * Enable **frame buffer, Plymouth and Xorg display rotation**.
     * Supports `modesetting` *and* `xorg-video-intel` display drivers.
   * Enable **TearFree rendering by default**.
   * Enable touch screen rotation for Xorg and Wayland.
@@ -52,13 +52,13 @@ The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the fo
   * Enable **fractional scaling** for 1920x1200 displays. *(MATE Desktop only)*
     * Results in an effective resolution of 1280x800 to make the display panels easily readable.
     * Simple to toggle on/off if you want to restore full resolution.
-  * **GRUB is usable post-install**.
-    * GPD Pocket, WIN 2, MicroPC & TopJoy Falcon GRUB is rotated 90 degrees, but functional.
-    * GPD Pocket 2 and GPD P2 Max GRUB is correctly rotated and functional.
-  * GPD Pocket BRMC4356 WiFi firmware enabled by default.
-  * GPD Pocket fan control kernel module enabled by default.
-  * GPD Pocket 3 & TopJoy Falcon **accelerometer support for automatic screen rotation**.
-  * GPD WIN Max features a custom, persistent, EDID.
+  * GPD Pocket:
+    * BRMC4356 WiFi firmware enabled by default.
+    * Fan control kernel module enabled by default.
+  * GPD Pocket 3 & TopJoy Falcon:
+    * **Accelerometer support for automatic screen rotation**.
+  * GPD WIN Max:
+    *  Features a custom, persistent, EDID.
 
 ## Known Issues
 
@@ -73,7 +73,7 @@ The workaround is to tilt your head. Issue affects:
   * GPD WIN Max
   * TopJoy Falcon
 
-### Boot splash is rootated 90 degrees
+### Boot splash is rotated 90 degrees
 
 The workaround is to tilt your head. Issue affects:
 
