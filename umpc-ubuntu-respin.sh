@@ -10,7 +10,7 @@ function usage() {
     echo
     echo "OPTIONS"
     echo "    -d"
-    echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket2', 'gpd-pocket3', 'gpd-micropc', 'gpd-p2-max', 'gpd-win2', 'gpd-win-max' or 'topjoy-falcon'"
+    echo "        device modifications to apply to the iso image, can be 'gpd-pocket', 'gpd-pocket2', 'gpd-pocket3', 'gpd-micropc', 'gpd-p2-max', 'gpd-win2', 'gpd-win3', 'gpd-win-max' or 'topjoy-falcon'"
     echo
     echo "    -h"
     echo "        display this help and exit"
@@ -79,7 +79,7 @@ if [ -z "${UMPC}" ]; then
 fi
 
 case "${UMPC}" in
-  gpd-pocket|gpd-pocket2|gpd-pocket3|gpd-micropc|gpd-p2-max|gpd-win2|gpd-win-max|topjoy-falcon) true;;
+  gpd-pocket|gpd-pocket2|gpd-pocket3|gpd-micropc|gpd-p2-max|gpd-win2|gpd-win3|gpd-win-max|topjoy-falcon) true;;
   *) echo "ERROR! Unknown device name given."
      usage;;
 esac
@@ -263,6 +263,22 @@ case ${UMPC} in
     sed -i 's/quiet splash/fbcon=rotate:1 video=eDP-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 video=eDP-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
     ;;
+  gpd-win3)
+    # Frame buffer rotation and s2idle by default.
+    # s2idle is a temporary workaround
+    #  - Otherwise the screen will not turn back on after blanking if the system is busy.
+    #  - This issue also affects suspend feature.
+    #  - Patches have been submitted to upstream Linux and will be part of 5.15.
+    #    Patch 1/2 - https://cgit.freedesktop.org/drm-tip/commit/?id=43315f86a3a59255463d14042f2974d134710d9c
+    #    Patch 2/2 - https://cgit.freedesktop.org/drm-tip/commit/?id=b90acd0987c81e4c8d7b4e7995ff3cecd16b2122
+    sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle/' "${GRUB_DEFAULT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
+    sed -i 's/quiet splash/fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
+
+    # Might need a workaround for the touch screen.
+    # > "My touch screen does work if I "modprobe -r goodix && modprobe goodix"
+    # > after login, as opposed to adding it under /etc/modules-load.d."
+    # See also: https://aur.archlinux.org/packages/goodix-gpdwin3-dkms/
   gpd-win-max)
     # Add device specific EDID
     inject_data "${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
