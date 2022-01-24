@@ -221,9 +221,12 @@ case ${UMPC} in
     ;;
   gpd-pocket3)
     # Frame buffer rotation and s2idle by default.
-    # s2idle is a temporary workaround, until this patch is in Ubuntu:
-    # - https://github.com/torvalds/linux/commit/d3c4b6f64ad356c0d9ddbcf73fa471e6a841cc5c
-    # - https://bugzilla.kernel.org/show_bug.cgi?id=214271
+    # s2idle is a temporary workaround
+    #  - Otherwise the screen will not turn back on after blanking if the system is busy.
+    #  - This issue also affects suspend feature.
+    #  - Patches have been submitted to upstream Linux and will be part of 5.15.
+    #    Patch 1/2 - https://cgit.freedesktop.org/drm-tip/commit/?id=43315f86a3a59255463d14042f2974d134710d9c
+    #    Patch 2/2 - https://cgit.freedesktop.org/drm-tip/commit/?id=b90acd0987c81e4c8d7b4e7995ff3cecd16b2122
     sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle/' "${GRUB_DEFAULT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"

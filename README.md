@@ -79,13 +79,6 @@ The workaround is to tilt your head. Issue affects:
 
   * GPD WIN Max
 
-## Built-in speaker doesn't play audio from the right channel.
-
-The workaround is to use headphones connected the 3.5mm audio jack or
-[apply configuration changes](https://www.reddit.com/r/GPDPocket/comments/7ihln2/linux_audio_mixing_for_mono_speaker_fixed/). Issue affects:
-
-  * GPD Pocket
-
 ### Touch coordinates incorrect when external HDMI monitor is connected
 
 When a HDMI display is connected, the touch coordinates on the internal display are incorrect. Issue affects:
@@ -105,14 +98,17 @@ device and run the following to inject the required hardware configuration.
 ```bash
 git clone https://github.com/wimpysworld/umpc-ubuntu.git
 cd umpc-ubuntu
-sudo ./umpc-ubuntu.sh enable || disable
 ```
 
-You must supply one of the following modes of operation
+Edit `./umpc-ubuntu.sh` and change `UMPC="gpd-pocket3"` at the top of the script
+to match your computer, supported options are: `gpd-pocket`, `gpd-pocket2`,
+`gpd-pocket3`, `gpd-p2-max`, `gpd-micropc`, `gpd-win2`, `gpd-win-max` or `topjoy-falcon`.
 
-  * `enable`  : apply the UMPC hardware configuration
-  * `disable` : remove the UMPC hardware configuration
-  * `help`    : This help.
+The run the script to enable the configuration tweaks.
+
+```bash
+sudo ./umpc-ubuntu.sh enable
+```
 
 ### umpc-ubuntu-respin.sh
 
@@ -121,7 +117,7 @@ git clone https://github.com/wimpysworld/umpc-ubuntu.git
 cd umpc-ubuntu
 ```
 
-  * Download an .iso image for one of the Ubuntu 20.04 (or newer) flavours.
+  * Download an .iso image for one of the Ubuntu MATE 20.04 (or newer) or one of the other Ubuntu flavours.
 
 ```bash
 sudo ./umpc-ubuntu-respin.sh -d gpd-pocket ubuntu-mate-20.04.3-desktop-amd64.iso
@@ -129,12 +125,13 @@ sudo ./umpc-ubuntu-respin.sh -d gpd-pocket2 ubuntu-mate-20.04.3-desktop-amd64.is
 sudo ./umpc-ubuntu-respin.sh -d gpd-pocket3 ubuntu-mate-21.10-desktop-amd64.iso
 sudo ./umpc-ubuntu-respin.sh -d gpd-micropc ubuntu-mate-20.04.3-desktop-amd64.iso
 sudo ./umpc-ubuntu-respin.sh -d gpd-p2-max ubuntu-mate-20.04.3-desktop-amd64.iso
+sudo ./umpc-ubuntu-respin.sh -d gpd-win2 ubuntu-mate-20.04.3-desktop-amd64.iso
 sudo ./umpc-ubuntu-respin.sh -d gpd-win-max ubuntu-mate-20.04.3-desktop-amd64.iso
 sudo ./umpc-ubuntu-respin.sh -d topjoy-falcon ubuntu-mate-20.04.3-desktop-amd64.iso
 ```
 
-A new .iso will be created that includes the additional hardware tweaks
-required by the selected UMPC device.
+A new .iso will be created that includes the additional hardware tweaks required
+by the selected UMPC device.
 
 ## Accessing boot menus & BIOS
 
@@ -142,17 +139,18 @@ Switch the device on, immediately hold/tap the corresponding key(s).
 
 |      Device      |      BIOS    |  Boot  Menu  |
 |   -------------  | ------------ | ------------ |
-| GPD Pocket       | `Fn` + `F7`  | `Fn` + `F7`  |
+| GPD Pocket       |    `Del`     | `Fn` + `F7`  |
 | GPD Pocket 2     | `Fn` + `F12` | `Fn` + `F12` |
 | GPD Pocket 3     | `Fn` + `F7`  | `Fn` + `F7`  |
 | GPD WIN 2(!)     |    `Del`     |    `Del`     |
+| GPD WIN 3(!)     |    `Del`     |    `Del`     |
 | GPD MicroPC      |    `Del`     | `Fn` + `F7`  |
 | GPD P2 Max       | `Fn` + `F7`  | `Fn` + `F7`  |
 | GPD WIN Max      |     `F7`     |     `F7`     |
 | OneMix Yoga 2    | `Fn` + `F7`  | `Fn` + `F7`  |
 | TopJoy Falcon    | `Fn` + `F2`  | `Fn` + `F12` |
 
-  * **GPD WIN 2(!)**: Navigate to *Save & Exit* and choose the storage device you want to boot from under *Boot Override*
+  * **GPD WIN 2/3(!)**: Boot it by holding `Del` (Fn+Backspace), navigate to *Save & Exit* and choose the storage device you want to boot from under *Boot Override*
 
 ## Device matrix
 
@@ -165,15 +163,16 @@ xinput
 
 |      Device      |    Monitor   | Resolution | Rotation |              Keyboard/Mouse               |          Touch Screen         | Kernel Req | Ubuntu Req |    Common     |
 |   -------------  | ------------ | ---------- | -------- | ----------------------------------------- | ----------------------------- | ---------- | ---------- | ------------- |
-| GPD Pocket       | DSI-1 / DSI1 | 1200x1920  | Right    | SINO WEALTH Gaming Keyboard               | Goodix Capacitive TouchScreen | >= 4.12    | >= 18.04.2 | gpd-pocket    |
+| GPD Pocket       | DSI-1 / DSI1 | 1200x1920  | Right    | SINO WEALTH Gaming Keyboard               | Goodix Capacitive TouchScreen | >= 4.14    | >= 18.04.2 | gpd-pocket    |
 | GPD Pocket 2     | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
-| GPD Pocket 3     | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | GXTP7380:00 27C6:0113         | >= 5.13    | >= 21.10   | gpd-pocket3   |
+| GPD Pocket 3     | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | GXTP7380:00 27C6:0113         | >= 5.15    | >= 22.04   | gpd-pocket3   |
 | GPD WIN 2        | eDP-1 / eDP1 | 720x1280   | Right    | HK-ZYYK-US-A1-02-00 USB Keyboard Mouse    | Goodix Capacitive TouchScreen | >= 4.18    | >= 19.04   | gpd-win2      |
+| GPD WIN 3        | DSI-1 / DSI1 | 720x1280   | Right    |                                           | Goodix Capacitive TouchScreen | >= 5.15    | >= 22.04   | gpd-win3      |
 | GPD MicroPC      | DSI-1 / DSI1 | 720x1280   | Right    | AMR-4630-XXX-0- 0-1023 USB KEYBOARD Mouse | n/a                           | >= 5.2     | >= 19.10   | gpd-micropc   |
-| GPD P2 Max       | eDP-1 / eDP1 | 2560x1600  | n/a      | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | ?          | >          | gpd-p2-max    |
+| GPD P2 Max       | eDP-1 / eDP1 | 2560x1600  | n/a      | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen |            |            | gpd-p2-max    |
 | GPD WIN Max      | eDP-1 / eDP1 | 800x1280   | Right    | HTIX5288:00 093A:0255 Mouse               | Goodix Capacitive TouchScreen | >= 5.4     | >= 20.04.1 | gpd-win-max   |
-| OneMix Yoga      | ?            | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | ?             |
+| OneMix Yoga      |              | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 |               |
 | OneMix Yoga 1s   | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
 | OneMix Yoga 2    | eDP-1 / eDP1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | gpd-pocket2   |
 | TopJoy Falcon    | DSI-1 / DSI1 | 1200x1920  | Right    | HAILUCK CO.,LTD USB KEYBOARD Mouse        | Goodix Capacitive TouchScreen | >= 4.18    | >= 18.04.2 | topjoy-falcon |
-| Chuwi Minibook X | DSI-1 / DSI1 | 1200x1920  | Right    | SIPODEV USB Composite Device Mouse        | ?                             | ?          | ?          | n/a           |
+| Chuwi Minibook X | DSI-1 / DSI1 | 1200x1920  | Right    | SIPODEV USB Composite Device Mouse        |                               |            |            |               |
