@@ -193,6 +193,10 @@ case "${UMPC}" in
     ;;
 esac
 
+# NOTE! Do not inject this configuration anymore. The defaults are sane.
+# Enable Intel SNA, DRI1/3 and TearFree.
+# inject_data "${INTEL_CONF}"
+
 # Rotate the monitor.
 inject_data "${MONITOR_CONF}"
 inject_data "${MONITORS_XML}"
@@ -250,9 +254,8 @@ case ${UMPC} in
     # s2idle is a temporary workaround
     #  - Otherwise the screen will not turn back on after blanking if the system is busy.
     #  - This issue also affects suspend feature.
-    #  - Patches have been submitted to upstream Linux and will be part of 5.15.
-    #    Patch 1/2 - https://cgit.freedesktop.org/drm-tip/commit/?id=43315f86a3a59255463d14042f2974d134710d9c
-    #    Patch 2/2 - https://cgit.freedesktop.org/drm-tip/commit/?id=b90acd0987c81e4c8d7b4e7995ff3cecd16b2122
+    #  - Patches are being worked on, more info here:
+    #    https://ubuntu-mate.community/t/gpd-pocket-3-s3-sleep-waiting-for-kernel-fix/25053/
     sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle/' "${GRUB_DEFAULT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
@@ -269,8 +272,6 @@ case ${UMPC} in
     inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
     inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
     inject_data "${SQUASH_OUT}/usr/share/applications/umpc-display-scaler.desktop"
-    #inject_data "${SQUASH_OUT}/lib/systemd/system/umpc-display-scaler.service"
-    #ln -sf /lib/systemd/system/umpc-display-scaler.service "${SQUASH_OUT}/etc/systemd/system/oem-config.service.wants/"
     ;;
   gpd-p2-max)
     # Increase console font size
@@ -294,9 +295,8 @@ case ${UMPC} in
     # s2idle is a temporary workaround
     #  - Otherwise the screen will not turn back on after blanking if the system is busy.
     #  - This issue also affects suspend feature.
-    #  - Patches have been submitted to upstream Linux and will be part of 5.15.
-    #    Patch 1/2 - https://cgit.freedesktop.org/drm-tip/commit/?id=43315f86a3a59255463d14042f2974d134710d9c
-    #    Patch 2/2 - https://cgit.freedesktop.org/drm-tip/commit/?id=b90acd0987c81e4c8d7b4e7995ff3cecd16b2122
+    #  - Patches are being worked on, more info here:
+    #    https://ubuntu-mate.community/t/gpd-pocket-3-s3-sleep-waiting-for-kernel-fix/25053/
     sed -i 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle/' "${GRUB_DEFAULT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_BOOT_CONF}"
     sed -i 's/quiet splash/fbcon=rotate:1 video=DSI-1:panel_orientation=right_side_up mem_sleep_default=s2idle fsck.mode=skip quiet splash/g' "${GRUB_LOOPBACK_CONF}"
@@ -341,8 +341,6 @@ case ${UMPC} in
     inject_data "${SQUASH_OUT}/usr/bin/umpc-display-scaler"
     inject_data "${SQUASH_OUT}/etc/xdg/autostart/umpc-display-scaler.desktop"
     inject_data "${SQUASH_OUT}/usr/share/applications/umpc-display-scaler.desktop"
-    #inject_data "${SQUASH_OUT}/lib/systemd/system/umpc-display-scaler.service"
-    #ln -sf /lib/systemd/system/umpc-display-scaler.service "${SQUASH_OUT}/etc/systemd/system/oem-config.service.wants/"
     ;;
   *)
     echo "ERROR! No device configuration for ${UMPC}!"

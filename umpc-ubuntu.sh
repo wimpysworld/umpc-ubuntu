@@ -43,8 +43,9 @@ function inject_data() {
 }
 
 function enable_umpc_config() {
-  # Enable Intel SNA, DRI3 and TearFree.
-  inject_data "${INTEL_CONF}"
+  # NOTE! Do not inject this configuration anymore. The defaults are sane.
+  # Enable Intel SNA, DRI1/3 and TearFree.
+  # inject_data "${INTEL_CONF}"
 
   # Rotate the monitor.
   inject_data "${MONITOR_CONF}"
