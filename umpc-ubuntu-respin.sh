@@ -166,6 +166,17 @@ fi
 
 # Enable Intel SNA, DRI3 and TearFree.
 inject_data "${INTEL_CONF}"
+case "${UMPC}" in
+  gpd-win-max)
+    case ${VERSION} in
+      22.04*)
+        GRUB_D_CONF="${SQUASH_OUT}/etc/default/grub.d/${UMPC}-new.cfg"
+        echo "ERROR! GPD Win Max is only supported by Ubuntu 20.04 to 21.10."
+        exit 1
+        ;;
+    esac
+    ;;
+esac
 
 # Rotate the monitor.
 inject_data "${MONITOR_CONF}"
@@ -281,11 +292,21 @@ case ${UMPC} in
     # See also: https://aur.archlinux.org/packages/goodix-gpdwin3-dkms/
     ;;
   gpd-win-max)
-    # Add device specific EDID
-    inject_data "${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
-    sed -i "s/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"fbcon=rotate:1 video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin/" "${GRUB_DEFAULT_CONF}"
-    sed -i "s/quiet splash/fbcon=rotate:1 video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
-    sed -i "s/quiet splash/fbcon=rotate:1 video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
+    # Add device specific EDID on Ubuntu 21.10 are earlier
+    # https://patchwork.kernel.org/project/intel-gfx/cover/20210817204329.5457-1-anisse@astier.eu/#24416791
+    case "${VERSION}" in
+      22*)
+        sed -i "s/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"fbcon=rotate:1 video=eDP-1:800x1280/" "${GRUB_DEFAULT_CONF}"
+        sed -i "s/quiet splash/fbcon=rotate:1 video=eDP-1:800x1280 fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
+        sed -i "s/quiet splash/fbcon=rotate:1 video=eDP-1:800x1280 fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
+        ;;
+      *)
+        inject_data "${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
+        sed -i "s/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"fbcon=rotate:1 video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin/" "${GRUB_DEFAULT_CONF}"
+        sed -i "s/quiet splash/fbcon=rotate:1 video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fsck.mode=skip quiet splash/g" "${GRUB_BOOT_CONF}"
+        sed -i "s/quiet splash/fbcon=rotate:1 video=eDP-1:800x1280 drm.edid_firmware=eDP-1:edid\/${UMPC}-edid.bin fsck.mode=skip quiet splash/g" "${GRUB_LOOPBACK_CONF}"
+        ;;
+    esac
     ;;
   topjoy-falcon)
     # Frame buffer rotation
