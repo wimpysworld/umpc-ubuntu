@@ -279,6 +279,7 @@ case ${UMPC} in
     # > "My touch screen does work if I "modprobe -r goodix && modprobe goodix"
     # > after login, as opposed to adding it under /etc/modules-load.d."
     # See also: https://aur.archlinux.org/packages/goodix-gpdwin3-dkms/
+    ;;
   gpd-win-max)
     # Add device specific EDID
     inject_data "${SQUASH_OUT}/usr/lib/firmware/edid/${UMPC}-edid.bin"
