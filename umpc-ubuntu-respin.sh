@@ -164,9 +164,24 @@ else
   exit 1
 fi
 
-# Enable Intel SNA, DRI3 and TearFree.
-inject_data "${INTEL_CONF}"
+# Check versions
+case ${VERSION} in
+  14*|16*|18*)
+    echo "ERROR! Only Ubuntu 20.04 or newer is supported."
+    exit 1
+    ;;
+esac
+
+# Some device have require specific Ubuntu releases.
 case "${UMPC}" in
+  gpd-pocket3)
+    case ${VERSION} in
+      20*|21.04)
+        echo "ERROR! GPD Pocket 3 is only supported by Ubuntu 21.10 and newer."
+        exit 1
+        ;;
+    esac
+    ;;
   gpd-win-max)
     case ${VERSION} in
       22.04*)
