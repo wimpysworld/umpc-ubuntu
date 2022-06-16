@@ -10,13 +10,16 @@ case "${PRIMARY_RESOLUTION}" in
     SCALE=1;;
 esac
 
-PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g' | sed 's/-//g')
-if [ "${PRIMARY_DISPLAY}" == "eDP1" ] || [ "${PRIMARY_DISPLAY}" == "DSI1" ]; then
-  xrandr --output "${PRIMARY_DISPLAY}" --brightness 0
-  xrandr --output "${PRIMARY_DISPLAY}" --scale "${SCALE}x${SCALE}"
-  sleep 0.85
-  xrandr --output "${PRIMARY_DISPLAY}" --brightness 1
-  notify-send --expire-time=5000 --icon=info "${NOTIFY} (${PRIMARY_DISPLAY})"
-else
-  notify-send --expire-time=5000 --icon=error "The primary display (${PRIMARY_DISPLAY}) is not compatible with UMPC Display Scaler."
-fi
+PRIMARY_DISPLAY=$(xrandr | grep "connected primary" | cut -d' ' -f1 | sed 's/ //g')
+case "${PRIMARY_DISPLAY}" in
+  eDP1|eDP-1|DSI1|DSI-1)
+    xrandr --output "${PRIMARY_DISPLAY}" --brightness 0
+    xrandr --output "${PRIMARY_DISPLAY}" --scale "${SCALE}x${SCALE}"
+    sleep 0.85
+    xrandr --output "${PRIMARY_DISPLAY}" --brightness 1
+    notify-send --expire-time=5000 --icon=info "${NOTIFY} (${PRIMARY_DISPLAY})"
+    ;;
+  *)
+    notify-send --expire-time=5000 --icon=error "The primary display (${PRIMARY_DISPLAY}) is not compatible with UMPC Display Scaler."
+    ;;
+esac
