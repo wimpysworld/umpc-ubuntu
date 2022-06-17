@@ -7,7 +7,7 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 
 sudo true
-for ISO_IN in ubuntu-mate-22.04-desktop-amd64.iso; do
+for ISO_IN in ubuntu-mate-20.04.4-desktop-amd64.iso ubuntu-mate-22.04-desktop-amd64.iso; do
   for UMPC in gpd-pocket gpd-pocket2 gpd-pocket3 gpd-micropc gpd-p2-max gpd-win2 gpd-win-max topjoy-falcon; do
     echo "Making ${ISO_IN} for ${UMPC}"
     ISO_OUT=$(basename "${ISO_IN}" | sed "s/\.iso/-${UMPC}\.iso/")
