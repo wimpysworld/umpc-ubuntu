@@ -61,6 +61,12 @@ if [ ! -f /usr/bin/xorriso ]; then
   apt-get -y install xorriso
 fi
 
+if [ ! -f /usr/bin/unsquashfs ]; then
+  echo "ERROR! Unable to find /usr/bin/unsquashfs. Installing now..."
+  apt-get -y install squashfs-tools
+fi
+
+
 UMPC=""
 OPTSTRING=d:h
 while getopts ${OPTSTRING} OPT; do
