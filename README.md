@@ -39,7 +39,7 @@ Yoga devices are also supported.
 
 ## What works
 
-The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpc/) add the following tweaks:
+The [Ubuntu MATE images for the UMPCs](https://ubuntu-mate.org/umpcs/) add the following tweaks:
 
   * Enable **frame buffer, Plymouth and Xorg display rotation**.
     * Supports `modesetting` *and* `xorg-video-intel` display drivers.
