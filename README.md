@@ -22,7 +22,7 @@ others.
 
 ## Pre-configured images
 
-The Ubuntu MATE team offers a bespoke images for the
+The Ubuntu MATE team offers bespoke images for the
 [GPD Pocket](https://gpd.hk/gpdpocket),
 [GPD Pocket 2](https://gpd.hk/gpdpocket2),
 [GPD Pocket 3](https://gpd.hk/gpdpocket3),
@@ -104,7 +104,7 @@ Edit `./umpc-ubuntu.sh` and change `UMPC="gpd-pocket3"` at the top of the script
 to match your computer, supported options are: `gpd-pocket`, `gpd-pocket2`,
 `gpd-pocket3`, `gpd-p2-max`, `gpd-micropc`, `gpd-win2`, `gpd-win-max` or `topjoy-falcon`.
 
-The run the script to enable the configuration tweaks.
+Then run the script to enable the configuration tweaks.
 
 ```bash
 sudo ./umpc-ubuntu.sh enable
