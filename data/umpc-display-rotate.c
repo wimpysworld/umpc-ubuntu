@@ -49,7 +49,8 @@ static const char touchy[][48] = {
 };
 
 static const char screens[][8] = {
-  "DSI1"  //GPD Pocket 3 & TopJoy Falcon
+  "DSI1",  //GPD Pocket 3 & TopJoy Falcon
+  "DSI-1"  //GPD Pocket 3 & TopJoy Falcon
 };
 
 #define RADIANS_TO_DEGREES 180.0/M_PI

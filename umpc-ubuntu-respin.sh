@@ -181,6 +181,9 @@ esac
 # Some device have require specific Ubuntu releases.
 case "${UMPC}" in
   gpd-pocket3)
+    # Enable Intel SNA, DRI1/3 and TearFree.
+    inject_data "${INTEL_CONF}"
+
     case ${VERSION} in
       20*|21.04)
         echo "ERROR! GPD Pocket 3 is only supported by Ubuntu 21.10 and newer."
@@ -210,17 +213,25 @@ inject_data "${MONITORS_XML}"
 # Scroll while holding down the right track point button
 inject_data "${TRACKPOINT_CONF}"
 
-# Rotate the touchscreen.
-inject_data "${TOUCH_RULES}"
-
-# Configure kernel modules
-inject_data "${MODPROBE_CONF}"
-
 # Apply device specific gschema overrides
 inject_data "${GSCHEMA_OVERRIDE}"
 
 # Add device specific /etc/grub.d configuration
 inject_data "${GRUB_D_CONF}"
+
+
+case ${UMPC} in
+  gpd-pocket3)
+    ;;
+  *)
+    # Rotate the touchscreen.
+    inject_data "${TOUCH_RULES}"
+
+    # Configure kernel modules
+    inject_data "${MODPROBE_CONF}"
+    ;;
+esac
+
 
 # Device specific tweaks
 case ${UMPC} in
