@@ -219,14 +219,14 @@ inject_data "${GSCHEMA_OVERRIDE}"
 # Add device specific /etc/grub.d configuration
 inject_data "${GRUB_D_CONF}"
 
+# Rotate the touchscreen.
+inject_data "${TOUCH_RULES}"
+
 
 case ${UMPC} in
   gpd-pocket3)
     ;;
   *)
-    # Rotate the touchscreen.
-    inject_data "${TOUCH_RULES}"
-
     # Configure kernel modules
     inject_data "${MODPROBE_CONF}"
     ;;
