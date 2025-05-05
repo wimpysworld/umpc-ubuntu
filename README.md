@@ -133,6 +133,45 @@ sudo ./umpc-ubuntu-respin.sh -d topjoy-falcon ubuntu-mate-20.04.3-desktop-amd64.
 A new .iso will be created that includes the additional hardware tweaks required
 by the selected UMPC device.
 
+### umpc-ubuntu-respin.sh (using Docker on macOS/Windows/Linux)
+
+For users on macOS or Windows (or Linux users who prefer containerization), Docker can be used to run the `umpc-ubuntu-respin.sh` script without needing a native Linux environment or modifying the script.
+
+**Prerequisites:**
+
+*   [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed (for Mac/Windows) or Docker Engine (for Linux).
+*   The original Ubuntu `.iso` file you want to modify placed in the root directory of this project (alongside the `Dockerfile`).
+
+**Steps:**
+
+1.  **Build the Docker image:**
+    Open a terminal in the root directory of this project and run:
+    ```bash
+    docker build -t umpc-respin .
+    ```
+    This creates a Docker image named `umpc-respin` containing the script and all its dependencies.
+
+2.  **Run the respin script:**
+    Execute the following command in your terminal, still in the project's root directory:
+    ```bash
+    docker run \
+      --rm \
+      -it \
+      --privileged \
+      -v "$(pwd)":/app \
+      umpc-respin \
+      -d <device_name> <original_iso_name.iso>
+    ```
+    *   Replace `<device_name>` with the target device (e.g., `gpd-pocket3`, `gpd-win-max`).
+    *   Replace `<original_iso_name.iso>` with the filename of the ISO in the project directory.
+    *   `--privileged`: This is required because the script needs to perform low-level operations like mounting loop devices inside the container. **Use with caution.**
+    *   `-v "$(pwd)":/app`: This maps your current project directory (on your host machine) to the `/app` directory inside the container, allowing the script to access the input ISO and write the output ISO back to your project directory.
+
+3.  **Output:**
+    The script will run inside the container, and the modified ISO (e.g., `<original_iso_name>-<device_name>.iso`) will appear in your project's root directory on your host machine.
+
+    *Note:* The output file will be owned by `root`. You may need to change its ownership on your host machine using `sudo chown $(id -u):$(id -g) <output_iso_name.iso>`.
+
 ## Accessing boot menus & BIOS
 
 Switch the device on, immediately hold/tap the corresponding key(s).
