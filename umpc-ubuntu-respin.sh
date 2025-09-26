@@ -107,7 +107,6 @@ fi
 
 MNT_IN="${HOME}/iso_in"
 MNT_OUT="${HOME}/iso_out"
-SQUASH_IN="${MNT_IN}/casper/filesystem.squashfs"
 SQUASH_OUT="${MNT_OUT}/casper/squashfs-root"
 XORG_CONF_PATH="${SQUASH_OUT}/usr/share/X11/xorg.conf.d"
 INTEL_CONF="${XORG_CONF_PATH}/20-${UMPC}-intel.conf"
@@ -148,21 +147,12 @@ else
   fi
 fi
 
-if [ -f "${MNT_IN}/.disk/info" ] && [ -f "${MNT_IN}/casper/filesystem.squashfs" ]; then
+
+if [ -f "${MNT_IN}/.disk/info" ] ; then
   FLAVOUR=$(cut -d' ' -f1 < "${MNT_IN}/.disk/info")
   VERSION=$(cut -d' ' -f2 < "${MNT_IN}/.disk/info")
   CODENAME=$(cut -d'"' -f2 < "${MNT_IN}/.disk/info")
   echo "Modifying ${FLAVOUR} ${VERSION} (${CODENAME}) for the ${UMPC}"
-
-  rsync -aHAXx --delete --quiet \
-    --exclude=/casper/filesystem.squashfs \
-    --exclude=/casper/filesystem.squashfs.gpg \
-    --exclude=/md5sum.txt \
-    "${MNT_IN}/" "${MNT_OUT}/" 2>&1 >/dev/null
-
-  # Extract the contents of the squashfs
-  unsquashfs -f -d "${SQUASH_OUT}" "${SQUASH_IN}"
-  umount -l "${MNT_IN}"
 else
   echo "ERROR! This doesn't look like an Ubuntu iso image."
   umount -l "${MNT_IN}"
@@ -176,11 +166,39 @@ case ${VERSION} in
     echo "ERROR! Only Ubuntu 20.04 or newer is supported."
     exit 1
     ;;
+  20*|22*)
+    CASPER_FS=filesystem
+    ;;
+  24*)
+    CASPER_FS=minimal
+    ;;
 esac
+
+SQUASH_IN="${MNT_IN}/casper/${CASPER_FS}.squashfs"
+
+if [ -f "${MNT_IN}/casper/${CASPER_FS}.squashfs" ]; then
+  rsync -aHAXx --delete --quiet \
+    --exclude="/casper/${CASPER_FS}.squashfs" \
+    --exclude="/casper/${CASPER_FS}.squashfs.gpg" \
+    --exclude=/md5sum.txt \
+    "${MNT_IN}/" "${MNT_OUT}/" 2>&1 >/dev/null
+
+  # Extract the contents of the squashfs
+  unsquashfs -f -d "${SQUASH_OUT}" "${SQUASH_IN}"
+  umount -l "${MNT_IN}"
+else
+  echo "ERROR! This doesn't look like an Ubuntu iso image."
+  umount -l "${MNT_IN}"
+  clean_up
+  exit 1
+fi
 
 # Some device have require specific Ubuntu releases.
 case "${UMPC}" in
   gpd-pocket3)
+    # Enable Intel SNA, DRI1/3 and TearFree.
+    inject_data "${INTEL_CONF}"
+
     case ${VERSION} in
       20*|21.04)
         echo "ERROR! GPD Pocket 3 is only supported by Ubuntu 21.10 and newer."
@@ -210,17 +228,25 @@ inject_data "${MONITORS_XML}"
 # Scroll while holding down the right track point button
 inject_data "${TRACKPOINT_CONF}"
 
-# Rotate the touchscreen.
-inject_data "${TOUCH_RULES}"
-
-# Configure kernel modules
-inject_data "${MODPROBE_CONF}"
-
 # Apply device specific gschema overrides
 inject_data "${GSCHEMA_OVERRIDE}"
 
 # Add device specific /etc/grub.d configuration
 inject_data "${GRUB_D_CONF}"
+
+# Rotate the touchscreen.
+inject_data "${TOUCH_RULES}"
+
+
+case ${UMPC} in
+  gpd-pocket3)
+    ;;
+  *)
+    # Configure kernel modules
+    inject_data "${MODPROBE_CONF}"
+    ;;
+esac
+
 
 # Device specific tweaks
 case ${UMPC} in
@@ -370,11 +396,11 @@ esac
 #echo
 
 # Update filesystem size
-du -sx --block-size=1 "${SQUASH_OUT}" | cut -f1 > "${MNT_OUT}/casper/filesystem.size"
+du -sx --block-size=1 "${SQUASH_OUT}" | cut -f1 > "${MNT_OUT}/casper/${CASPER_FS}.size"
 
 # Repack squahsfs
-rm -f "${MNT_OUT}/casper/filesystem.squashfs" 2>/dev/null
-mksquashfs "${SQUASH_OUT}" "${MNT_OUT}/casper/filesystem.squashfs"
+rm -f "${MNT_OUT}/casper/${CASPER_FS}.squashfs" 2>/dev/null
+mksquashfs "${SQUASH_OUT}" "${MNT_OUT}/casper/${CASPER_FS}.squashfs"
 echo "Cleaning up..."
 echo "  - ${SQUASH_OUT}"
 rm -rf "${SQUASH_OUT}"
@@ -394,7 +420,6 @@ case ${ISO_BUILD} in
   xorriso \
   -as mkisofs \
   -r \
-  -checksum_algorithm_iso md5,sha1 \
   -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
   -J \
   -l \
@@ -414,7 +439,6 @@ case ${ISO_BUILD} in
   xorriso \
   -as mkisofs \
   -r \
-  -checksum_algorithm_iso md5,sha1 \
   -J -joliet-long \
   -l \
   -b boot/grub/i386-pc/eltorito.img -no-emul-boot \
