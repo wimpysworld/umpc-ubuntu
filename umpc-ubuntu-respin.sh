@@ -420,7 +420,6 @@ case ${ISO_BUILD} in
   xorriso \
   -as mkisofs \
   -r \
-  -checksum_algorithm_iso md5,sha1 \
   -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
   -J \
   -l \
@@ -440,7 +439,6 @@ case ${ISO_BUILD} in
   xorriso \
   -as mkisofs \
   -r \
-  -checksum_algorithm_iso md5,sha1 \
   -J -joliet-long \
   -l \
   -b boot/grub/i386-pc/eltorito.img -no-emul-boot \
