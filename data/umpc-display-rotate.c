@@ -55,8 +55,8 @@ static const char screens[][8] = {
 
 #define RADIANS_TO_DEGREES 180.0/M_PI
 #define SAME_AXIS_LIMIT 5
-#define THRESHOLD_LANDSCAPE 35
-#define THRESHOLD_PORTRAIT 35
+#define THRESHOLD_LANDSCAPE 10
+#define THRESHOLD_PORTRAIT 10
 
 /* First apply scale to get m/s², then
  * convert to 1G ~= 256 as the code expects */
